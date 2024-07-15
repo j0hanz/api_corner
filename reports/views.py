@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, permissions, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Report
 from .serializers import ReportSerializer
