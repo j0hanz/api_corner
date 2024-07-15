@@ -2,6 +2,21 @@ from rest_framework import serializers
 from pathlib import Path
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 from .models import Post
+import datetime
+
+
+def shortnaturaltime(value):
+    now = datetime.datetime.now(datetime.timezone.utc)
+    delta = now - value
+
+    if delta < datetime.timedelta(minutes=1):
+        return 'just now'
+    elif delta < datetime.timedelta(hours=1):
+        return f'{int(delta.total_seconds() // 60)}m'
+    elif delta < datetime.timedelta(days=1):
+        return f'{int(delta.total_seconds() // 3600)}h'
+    else:
+        return f'{delta.days}d'
 
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -10,6 +25,8 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     tags = TagListSerializerField()
+    created_at = serializers.SerializerMethodField()
+    updated_at = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -30,8 +47,14 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         ]
 
     def get_is_owner(self, obj):
-        request = self.context['request']
-        return request.user == obj.owner
+        request = self.context.get('request', None)
+        return request.user == obj.owner if request else False
+
+    def get_created_at(self, obj):
+        return shortnaturaltime(obj.created_at)
+
+    def get_updated_at(self, obj):
+        return shortnaturaltime(obj.updated_at)
 
     def validate_image(self, value):
         self._validate_file_extension(value)
@@ -40,26 +63,26 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         return value
 
     def _validate_file_extension(self, value):
-        path = Path(value.name)
-        file_extension = path.suffix.lower()
-        valid_extensions = ['.jpg', '.jpeg', '.png']
+        file_extension = Path(value.name).suffix.lower()
+        valid_extensions = {'.jpg', '.jpeg', '.png'}
         if file_extension not in valid_extensions:
             raise serializers.ValidationError(
-                'Image must be jpg, jpeg or png!'
+                'Image must be jpg, jpeg, or png!'
             )
 
     def _validate_file_size(self, value):
-        if value.size > 5 * 1024 * 1024:
+        max_size = 5 * 1024 * 1024  # 5 MB
+        if value.size > max_size:
             raise serializers.ValidationError('Image size larger than 5MB!')
 
     def _validate_image_dimensions(self, value):
-        if value.image.height > 4096:
+        max_dimension = 4096
+        if (
+            value.image.height > max_dimension
+            or value.image.width > max_dimension
+        ):
             raise serializers.ValidationError(
-                'Image height larger than 4096px!'
-            )
-        if value.image.width > 4096:
-            raise serializers.ValidationError(
-                'Image width larger than 4096px!'
+                'Image dimensions larger than 4096px!'
             )
 
     def validate_title(self, value):
