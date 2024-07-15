@@ -71,7 +71,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             )
 
     def _validate_file_size(self, value):
-        max_size = 5 * 1024 * 1024  # 5 MB
+        max_size = 5 * 1024 * 1024
         if value.size > max_size:
             raise serializers.ValidationError('Image size larger than 5MB!')
 
