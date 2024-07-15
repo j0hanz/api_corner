@@ -6,6 +6,9 @@ import datetime
 
 
 def shortnaturaltime(value):
+    """
+    Convert a datetime value into a short, human-readable format.
+    """
     now = datetime.datetime.now(datetime.timezone.utc)
     delta = now - value
 
@@ -27,6 +30,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
+    comments_count = serializers.ReadOnlyField()
 
     class Meta:
         model = Post
@@ -44,6 +48,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'tags',
             'created_at',
             'updated_at',
+            'comments_count',
         ]
 
     def get_is_owner(self, obj):

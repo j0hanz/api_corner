@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Post
 from .serializers import PostSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
+from django.db.models import Count
 
 
 class PostListCreateView(generics.ListCreateAPIView):
@@ -13,7 +14,9 @@ class PostListCreateView(generics.ListCreateAPIView):
 
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Post.objects.all().order_by('-created_at')
+    queryset = Post.objects.annotate(
+        comments_count=Count('comments', distinct=True)
+    ).order_by('-created_at')
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
@@ -30,6 +33,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     ]
     ordering_fields = [
         'created_at',
+        'comments_count',
     ]
 
     def get_queryset(self):
@@ -51,4 +55,6 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Post.objects.all().order_by('-created_at')
+    queryset = Post.objects.annotate(
+        comments_count=Count('comments', distinct=True)
+    ).order_by('-created_at')
