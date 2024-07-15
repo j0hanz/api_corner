@@ -23,7 +23,7 @@ class ReportListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         post = self.request.data.get('post')
-        if post is None:
+        if not post:
             raise serializers.ValidationError(
                 {"post": "This field is required."}
             )
