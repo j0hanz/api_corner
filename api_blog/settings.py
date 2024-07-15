@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'taggit',
     'users',
     'posts',
+    'reports',
 ]
 
 SITE_ID = 1
