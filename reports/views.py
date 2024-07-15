@@ -17,14 +17,20 @@ class ReportListCreateView(generics.ListCreateAPIView):
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    filterset_fields = ['post', 'user']
-    search_fields = ['user__username', 'post__title', 'reason']
-    ordering_fields = ['reported_at', 'user', 'post']
+    filterset_fields = ['post', 'comment', 'user']
+    search_fields = [
+        'user__username',
+        'post__title',
+        'comment__content',
+        'reason',
+    ]
+    ordering_fields = ['reported_at', 'user', 'post', 'comment']
 
     def perform_create(self, serializer):
         post = self.request.data.get('post')
-        if not post:
+        comment = self.request.data.get('comment')
+        if not post and not comment:
             raise serializers.ValidationError(
-                {"post": "This field is required."}
+                {"post": "Either post or comment must be provided."}
             )
         serializer.save(user=self.request.user)
