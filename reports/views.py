@@ -17,29 +17,30 @@ class ReportListCreateView(generics.ListCreateAPIView):
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    filterset_fields = ['post', 'comment', 'reported_user', 'user']
+    filterset_fields = ['post', 'comment', 'reported_user', 'owner']
     search_fields = [
-        'user__username',
+        'owner__username',
+        'post__content',
         'comment__content',
         'reported_user__username',
         'reason',
     ]
     ordering_fields = [
         'reported_at',
-        'user',
+        'owner',
         'post',
         'comment',
         'reported_user',
     ]
 
     def perform_create(self, serializer):
-        data = self.request.data
-        if not any(
-            data.get(field) for field in ['post', 'comment', 'reported_user']
-        ):
+        post = self.request.data.get('post')
+        comment = self.request.data.get('comment')
+        reported_user = self.request.data.get('reported_user')
+        if not post and not comment and not reported_user:
             raise serializers.ValidationError(
                 {
-                    "non_field_errors": "Either post, comment, or reported_user must be provided."
+                    "post": "Either post, comment, or reported_user must be provided."
                 }
             )
-        serializer.save(user=self.request.user)
+        serializer.save(owner=self.request.user)

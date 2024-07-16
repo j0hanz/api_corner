@@ -10,7 +10,7 @@ class Contact(models.Model):
         ('support', 'Support'),
     ]
 
-    user = models.ForeignKey(
+    owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='contacts'
     )
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
@@ -23,4 +23,4 @@ class Contact(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Contact {self.id} by {self.user.username}'
+        return f'Contact {self.id} by {self.owner.username}'

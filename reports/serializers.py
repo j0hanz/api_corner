@@ -7,8 +7,9 @@ class ReportSerializer(serializers.ModelSerializer):
     Serializer for the Report model.
     """
 
-    user = serializers.ReadOnlyField(source='user.username')
+    owner = serializers.ReadOnlyField(source='owner.username')
     post_id = serializers.ReadOnlyField(source='post.id')
+    post_content = serializers.ReadOnlyField(source='post.content')
     comment_id = serializers.ReadOnlyField(source='comment.id')
     comment_content = serializers.ReadOnlyField(source='comment.content')
     reported_user_username = serializers.ReadOnlyField(
@@ -21,19 +22,22 @@ class ReportSerializer(serializers.ModelSerializer):
             'id',
             'post',
             'post_id',
+            'post_content',
             'comment',
             'comment_id',
             'comment_content',
             'reported_user',
             'reported_user_username',
-            'user',
+            'owner',
             'reason',
             'reported_at',
         ]
 
     def validate(self, data):
-        if not any(
-            data.get(field) for field in ['post', 'comment', 'reported_user']
+        if (
+            not data.get('post')
+            and not data.get('comment')
+            and not data.get('reported_user')
         ):
             raise serializers.ValidationError(
                 "Either post, comment, or reported_user must be provided."

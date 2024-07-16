@@ -18,12 +18,12 @@ class CommentListCreateView(generics.ListCreateAPIView):
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    filterset_fields = ['post', 'user']
-    search_fields = ['user__username', 'post__title', 'content']
-    ordering_fields = ['created_at', 'user', 'post']
+    filterset_fields = ['post', 'owner']
+    search_fields = ['owner__username', 'post__content', 'content']
+    ordering_fields = ['created_at', 'owner', 'post']
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(owner=self.request.user)
 
 
 class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):

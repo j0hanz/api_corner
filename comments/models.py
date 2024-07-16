@@ -8,7 +8,7 @@ class Comment(models.Model):
     Model for users to comment on posts.
     """
 
-    user = models.ForeignKey(
+    owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments'
     )
     post = models.ForeignKey(
@@ -22,6 +22,4 @@ class Comment(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return (
-            f'Comment {self.id} on Post {self.post.id} by {self.user.username}'
-        )
+        return f'Comment {self.id} on Post {self.post.id} by {self.owner.username}'

@@ -1,18 +1,16 @@
 from rest_framework import serializers
-from .models import Contact
+from .models import Like
 
 
-class ContactSerializer(serializers.ModelSerializer):
+class LikeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
-        model = Contact
+        model = Like
         fields = [
             'id',
             'owner',
-            'category',
-            'email',
-            'subject',
-            'message',
+            'post',
+            'comment',
             'created_at',
         ]

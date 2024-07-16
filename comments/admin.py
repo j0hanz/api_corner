@@ -10,17 +10,16 @@ class CommentAdmin(admin.ModelAdmin):
 
     list_display = (
         'id',
-        'user',
+        'owner',
         'post',
         'content',
         'created_at',
         'updated_at',
     )
-    list_filter = ('user', 'post', 'created_at')
-    search_fields = ('user__username', 'post__title', 'content')
+    list_filter = ('owner', 'post', 'created_at')
+    search_fields = ('owner__username', 'post__content', 'content')
     ordering = ['-created_at']
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.select_related('user', 'post')
-        return queryset
+        return queryset.select_related('owner', 'post')

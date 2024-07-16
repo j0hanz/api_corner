@@ -1,23 +1,6 @@
-import datetime
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from rest_framework import serializers
 from .models import Comment
-
-
-def shortnaturaltime(value):
-    """
-    Convert a datetime value into a short, human-readable format.
-    """
-    now = datetime.datetime.now(datetime.timezone.utc)
-    delta = now - value
-
-    if delta < datetime.timedelta(minutes=1):
-        return 'just now'
-    elif delta < datetime.timedelta(hours=1):
-        return f'{int(delta.total_seconds() // 60)}m'
-    elif delta < datetime.timedelta(days=1):
-        return f'{int(delta.total_seconds() // 3600)}h'
-    else:
-        return f'{delta.days}d'
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -25,10 +8,10 @@ class CommentSerializer(serializers.ModelSerializer):
     Serializer for the Comment model.
     """
 
-    user = serializers.ReadOnlyField(source='user.username')
+    owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
-    profile_id = serializers.ReadOnlyField(source='user.profile.id')
-    profile_image = serializers.ReadOnlyField(source='user.profile.image.url')
+    profile_id = serializers.ReadOnlyField(source='owner.profile.id')
+    profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
 
@@ -36,7 +19,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = [
             'id',
-            'user',
+            'owner',
             'post',
             'content',
             'created_at',
@@ -48,13 +31,13 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_is_owner(self, obj):
         request = self.context['request']
-        return request.user == obj.user
+        return request.user == obj.owner
 
     def get_created_at(self, obj):
-        return shortnaturaltime(obj.created_at)
+        return naturaltime(obj.created_at)
 
     def get_updated_at(self, obj):
-        return shortnaturaltime(obj.updated_at)
+        return naturaltime(obj.updated_at)
 
 
 class CommentDetailSerializer(CommentSerializer):

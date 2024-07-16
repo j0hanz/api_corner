@@ -10,17 +10,17 @@ class ReportAdmin(admin.ModelAdmin):
 
     list_display = (
         'id',
-        'user',
+        'owner',
         'post',
         'comment',
         'reported_user',
         'reason',
         'reported_at',
     )
-    list_filter = ('user', 'post', 'comment', 'reported_user', 'reported_at')
+    list_filter = ('owner', 'post', 'comment', 'reported_user', 'reported_at')
     search_fields = (
-        'user__username',
-        'post__title',
+        'owner__username',
+        'post__content',
         'comment__content',
         'reported_user__username',
         'reason',
@@ -30,5 +30,5 @@ class ReportAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         return queryset.select_related(
-            'user', 'post', 'comment', 'reported_user'
+            'owner', 'post', 'comment', 'reported_user'
         )
