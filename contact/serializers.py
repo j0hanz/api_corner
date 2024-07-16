@@ -16,3 +16,11 @@ class ContactSerializer(serializers.ModelSerializer):
             'message',
             'created_at',
         ]
+
+    def validate_email(self, value):
+        """
+        Check that the email field contains a valid email address.
+        """
+        if '@' not in value:
+            raise serializers.ValidationError("Enter a valid email address.")
+        return value

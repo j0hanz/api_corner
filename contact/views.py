@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, throttling
 from .models import Contact
 from .serializers import ContactSerializer
 
@@ -9,8 +9,26 @@ class ContactListCreateView(generics.ListCreateAPIView):
     """
 
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Contact.objects.all().order_by('-created_at')
     serializer_class = ContactSerializer
+    throttle_classes = [throttling.UserRateThrottle]
+
+    def get_queryset(self):
+        return Contact.objects.filter(owner=self.request.user).order_by(
+            '-created_at'
+        )
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class ContactRetrieveUpdateView(generics.RetrieveUpdateAPIView):
+    """
+    View for retrieving and updating a contact message.
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ContactSerializer
+    throttle_classes = [throttling.UserRateThrottle]
+
+    def get_queryset(self):
+        return Contact.objects.filter(owner=self.request.user)
