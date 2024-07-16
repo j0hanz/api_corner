@@ -15,28 +15,29 @@ class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Post.objects.annotate(
-        comments_count=Count('comments', distinct=True),
         likes_count=Count('likes', distinct=True),
+        comments_count=Count('comments', distinct=True),
+        favorites_count=Count('favorites', distinct=True),
     ).order_by('-created_at')
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    filterset_fields = [
-        'owner__profile',
-        'owner__profile__id',
-    ]
-    search_fields = [
-        'owner__username',
-        'tags__name',
-        'content',
-    ]
+    filterset_fields = ['owner__profile', 'tags__name', 'content']
+    search_fields = ['owner__username', 'content', 'tags__name']
     ordering_fields = [
         'created_at',
+        'likes_count',
+        'comments_count',
+        'favorites_count',
     ]
 
     def get_queryset(self):
+        """
+        Optionally restricts the returned posts to a given user,
+        by filtering against a `favorites` query parameter in the URL.
+        """
         queryset = super().get_queryset()
         user = self.request.user
         if 'favorites' in self.request.query_params and user.is_authenticated:
@@ -44,10 +45,13 @@ class PostListCreateView(generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
+        """
+        Assign the owner of the post to the user who created it.
+        """
         serializer.save(owner=self.request.user)
 
 
-class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     View for retrieving, updating, and deleting a single post.
     Only the owner can update or delete the post.
@@ -56,6 +60,7 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Post.objects.annotate(
-        comments_count=Count('comments', distinct=True),
         likes_count=Count('likes', distinct=True),
+        comments_count=Count('comments', distinct=True),
+        favorites_count=Count('favorites', distinct=True),
     ).order_by('-created_at')
