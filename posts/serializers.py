@@ -2,6 +2,7 @@ from rest_framework import serializers
 from pathlib import Path
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 from .models import Post
+from likes.models import Like
 import datetime
 
 
@@ -25,6 +26,9 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     tags = TagListSerializerField()
+    like_id = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
 
@@ -42,6 +46,9 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'tags',
             'created_at',
             'updated_at',
+            'like_id',
+            'likes_count',
+            'comments_count',
         ]
 
     def get_is_owner(self, obj):
@@ -53,6 +60,35 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     def get_updated_at(self, obj):
         return shortnaturaltime(obj.updated_at)
+
+    def get_like_id(self, obj):
+        """
+        Gets the like id if the user has liked the post.
+        If user is not authenticated, or has not liked the post,
+        return None.
+        """
+        user = self.context.get('request').user
+        if user.is_authenticated:
+            like = Like.objects.filter(owner=user, post=obj).first()
+            return like.id if like else None
+        return None
+
+    def get_likes_count(self, obj):
+        """
+        Returns the number of likes for the post.
+        "likes" is referencing the Like model, connected to the Post model,
+        through related_name="likes".
+        """
+        return obj.likes.count()
+
+    def get_comments_count(self, obj):
+        """
+        Returns the number of comments for the post.
+        "comments" is referencing the Comment model,
+        connected to the Post model,
+        through related_name="comments".
+        """
+        return obj.comments.count()
 
     def validate_image(self, value):
         self._validate_file_extension(value)
