@@ -8,9 +8,15 @@ class ContactAdmin(admin.ModelAdmin):
     Register Contact model in the admin panel.
     """
 
-    list_display = ('id', 'user', 'category', 'subject', 'created_at')
+    list_display = ('id', 'user', 'email', 'category', 'subject', 'created_at')
     list_filter = ('user', 'category', 'created_at')
-    search_fields = ('user__username', 'category', 'subject', 'message')
+    search_fields = (
+        'user__username',
+        'email',
+        'category',
+        'subject',
+        'message',
+    )
     ordering = ['-created_at']
 
     def get_queryset(self, request):

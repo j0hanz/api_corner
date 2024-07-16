@@ -11,6 +11,7 @@ class ContactSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'category',
+            'email',
             'subject',
             'message',
             'created_at',
