@@ -9,7 +9,6 @@ class ReportSerializer(serializers.ModelSerializer):
 
     user = serializers.ReadOnlyField(source='user.username')
     post_id = serializers.ReadOnlyField(source='post.id')
-    post_title = serializers.ReadOnlyField(source='post.title')
     comment_id = serializers.ReadOnlyField(source='comment.id')
     comment_content = serializers.ReadOnlyField(source='comment.content')
     reported_user_username = serializers.ReadOnlyField(
@@ -22,7 +21,6 @@ class ReportSerializer(serializers.ModelSerializer):
             'id',
             'post',
             'post_id',
-            'post_title',
             'comment',
             'comment_id',
             'comment_content',

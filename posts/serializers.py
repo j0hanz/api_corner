@@ -6,9 +6,6 @@ import datetime
 
 
 def shortnaturaltime(value):
-    """
-    Convert a datetime value into a short, human-readable format.
-    """
     now = datetime.datetime.now(datetime.timezone.utc)
     delta = now - value
 
@@ -30,7 +27,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
-    comments_count = serializers.ReadOnlyField()
 
     class Meta:
         model = Post
@@ -40,15 +36,12 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'is_owner',
             'profile_id',
             'profile_image',
-            'title',
             'content',
-            'excerpt',
             'image',
             'image_filter',
             'tags',
             'created_at',
             'updated_at',
-            'comments_count',
         ]
 
     def get_is_owner(self, obj):
@@ -89,11 +82,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Image dimensions larger than 4096px!'
             )
-
-    def validate_title(self, value):
-        if not value.strip():
-            raise serializers.ValidationError("Title cannot be empty.")
-        return value
 
     def validate_content(self, value):
         if not value.strip():

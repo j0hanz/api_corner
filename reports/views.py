@@ -20,7 +20,6 @@ class ReportListCreateView(generics.ListCreateAPIView):
     filterset_fields = ['post', 'comment', 'reported_user', 'user']
     search_fields = [
         'user__username',
-        'post__title',
         'comment__content',
         'reported_user__username',
         'reason',
