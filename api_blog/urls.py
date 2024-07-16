@@ -20,20 +20,20 @@ from django.urls import path, include
 from .views import root_route
 
 urlpatterns = [
-    path('', root_route),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path(
         'dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')
     ),
+    path('', root_route),
     path('users/', include('users.urls')),
     path('posts/', include('posts.urls')),
-    path('reports/', include('reports.urls')),
     path('comments/', include('comments.urls')),
-    path('contact/', include('contact.urls')),
     path('likes/', include('likes.urls')),
-    path('news/', include('news.urls')),
     path('bookmarks/', include('bookmarks.urls')),
     path('followers/', include('followers.urls')),
+    path('reports/', include('reports.urls')),
+    path('contact/', include('contact.urls')),
+    path('news/', include('news.urls')),
 ]
