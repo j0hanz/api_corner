@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'contact',
     'likes',
     'news',
+    'bookmarks',
 ]
 
 SITE_ID = 1
