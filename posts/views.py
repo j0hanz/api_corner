@@ -17,7 +17,6 @@ class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.annotate(
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comments', distinct=True),
-        favorites_count=Count('favorites', distinct=True),
     ).order_by('-created_at')
     filter_backends = [
         filters.OrderingFilter,
@@ -26,28 +25,12 @@ class PostListCreateView(generics.ListCreateAPIView):
     ]
     filterset_fields = ['owner__profile', 'tags__name', 'content']
     search_fields = ['owner__username', 'content', 'tags__name']
-    ordering_fields = [
-        'created_at',
-        'likes_count',
-        'comments_count',
-        'favorites_count',
-    ]
+    ordering_fields = ['created_at', 'likes_count', 'comments_count']
 
     def get_queryset(self):
-        """
-        Optionally restricts the returned posts to a given user,
-        by filtering against a `favorites` query parameter in the URL.
-        """
-        queryset = super().get_queryset()
-        user = self.request.user
-        if 'favorites' in self.request.query_params and user.is_authenticated:
-            queryset = queryset.filter(favorites__owner=user)
-        return queryset
+        return super().get_queryset()
 
     def perform_create(self, serializer):
-        """
-        Assign the owner of the post to the user who created it.
-        """
         serializer.save(owner=self.request.user)
 
 
@@ -62,5 +45,4 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.annotate(
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comments', distinct=True),
-        favorites_count=Count('favorites', distinct=True),
     ).order_by('-created_at')

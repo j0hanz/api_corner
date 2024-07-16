@@ -5,7 +5,7 @@ from .models import Post
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """
-    Register Post model in the admin panel.
+    Admin configuration for the Post model.
     """
 
     list_display = ('id', 'owner', 'content', 'created_at', 'updated_at')
