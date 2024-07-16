@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Count  # Import Count
+from django.db.models import Count
 from .models import Post
 from .serializers import PostSerializer
 from api_blog.permissions import IsOwnerOrReadOnly

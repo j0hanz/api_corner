@@ -23,7 +23,7 @@ class News(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     content = models.TextField()
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='news'
+        User, on_delete=models.CASCADE, related_name='news_author'
     )
     image = models.ImageField(upload_to='images/', blank=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
