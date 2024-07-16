@@ -124,8 +124,8 @@ class FavoriteMovieGenre(models.Model):
 
 class Profile(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=255, blank=True)
-    last_name = models.CharField(max_length=255, blank=True)
+    first_name = models.CharField(max_length=35, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
     bio = models.TextField(blank=True)
     favorite_movie_genre = models.ForeignKey(
         FavoriteMovieGenre,

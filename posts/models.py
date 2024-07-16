@@ -21,7 +21,7 @@ class Post(models.Model):
         ('xpro2', 'X-pro II'),
     ]
 
-    content = models.TextField()
+    content = models.TextField(max_length=500)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="posts"
     )

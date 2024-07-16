@@ -19,9 +19,9 @@ class News(models.Model):
         (CATEGORY_IMPORTANT, 'Important'),
     ]
 
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
-    content = models.TextField()
+    title = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
+    content = models.TextField(max_length=3000)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='news_author'
     )

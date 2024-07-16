@@ -13,10 +13,10 @@ class Contact(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='contacts'
     )
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
-    email = models.EmailField(max_length=255, validators=[EmailValidator()])
-    subject = models.CharField(max_length=255)
-    message = models.TextField()
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    email = models.EmailField(max_length=100, validators=[EmailValidator()])
+    subject = models.CharField(max_length=100)
+    message = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -33,7 +33,7 @@ class Report(models.Model):
         null=True,
         blank=True,
     )
-    reason = models.TextField()
+    reason = models.TextField(blank=False)
     reported_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
