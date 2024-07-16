@@ -37,6 +37,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     favorite_movie_genre = FavoriteMovieGenreSerializer(allow_null=True)
     favorite_music_genre = FavoriteMusicGenreSerializer(allow_null=True)
     favorite_sport = FavoriteSportSerializer(allow_null=True)
+    followers_count = serializers.ReadOnlyField()
+    following_count = serializers.ReadOnlyField()
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -107,5 +109,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'is_owner',
+            'followers_count',
+            'following_count',
         ]
         read_only_fields = ['owner', 'created_at', 'updated_at']
