@@ -13,6 +13,7 @@ class NewsSerializer(serializers.ModelSerializer):
             'slug',
             'content',
             'author',
+            'image',
             'category',
             'published_at',
             'updated_at',

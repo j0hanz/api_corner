@@ -25,6 +25,7 @@ class News(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='news'
     )
+    image = models.ImageField(upload_to='images/', blank=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     published_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

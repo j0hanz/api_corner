@@ -15,9 +15,16 @@ class NewsAdmin(admin.ModelAdmin):
         'category',
         'published_at',
         'updated_at',
+        'image',
     )
     list_filter = ('category', 'author', 'published_at')
-    search_fields = ('title', 'content', 'author__username', 'category')
+    search_fields = (
+        'title',
+        'content',
+        'author__username',
+        'category',
+        'image',
+    )
     ordering = ['-published_at']
 
     def get_queryset(self, request):
