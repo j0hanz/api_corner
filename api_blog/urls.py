@@ -33,4 +33,5 @@ urlpatterns = [
     path('comments/', include('comments.urls')),
     path('contact/', include('contact.urls')),
     path('likes/', include('likes.urls')),
+    path('news/', include('news.urls')),
 ]
