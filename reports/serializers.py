@@ -12,6 +12,9 @@ class ReportSerializer(serializers.ModelSerializer):
     post_title = serializers.ReadOnlyField(source='post.title')
     comment_id = serializers.ReadOnlyField(source='comment.id')
     comment_content = serializers.ReadOnlyField(source='comment.content')
+    reported_user_username = serializers.ReadOnlyField(
+        source='reported_user.username'
+    )
 
     class Meta:
         model = Report
@@ -23,14 +26,18 @@ class ReportSerializer(serializers.ModelSerializer):
             'comment',
             'comment_id',
             'comment_content',
+            'reported_user',
+            'reported_user_username',
             'user',
             'reason',
             'reported_at',
         ]
 
     def validate(self, data):
-        if not data.get('post') and not data.get('comment'):
+        if not any(
+            data.get(field) for field in ['post', 'comment', 'reported_user']
+        ):
             raise serializers.ValidationError(
-                "Either post or comment must be provided."
+                "Either post, comment, or reported_user must be provided."
             )
         return data

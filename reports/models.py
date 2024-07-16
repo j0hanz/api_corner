@@ -6,7 +6,7 @@ from comments.models import Comment
 
 class Report(models.Model):
     """
-    Model for users to report inappropriate posts or comments.
+    Model for users to report inappropriate posts, comments, or users.
     """
 
     user = models.ForeignKey(
@@ -26,6 +26,13 @@ class Report(models.Model):
         null=True,
         blank=True,
     )
+    reported_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reported_by',
+        null=True,
+        blank=True,
+    )
     reason = models.TextField()
     reported_at = models.DateTimeField(auto_now_add=True)
 
@@ -37,4 +44,6 @@ class Report(models.Model):
             return f'Report {self.id} - Post {self.post.id} by {self.user.username}'
         elif self.comment:
             return f'Report {self.id} - Comment {self.comment.id} by {self.user.username}'
+        elif self.reported_user:
+            return f'Report {self.id} - User {self.reported_user.username} by {self.user.username}'
         return f'Report {self.id} by {self.user.username}'
