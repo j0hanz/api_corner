@@ -17,3 +17,11 @@ class NewsSerializer(serializers.ModelSerializer):
             'published_at',
             'updated_at',
         ]
+
+    def validate(self, data):
+        request = self.context.get('request', None)
+        if request and not request.user.is_superuser:
+            raise serializers.ValidationError(
+                "Only superusers can create news articles."
+            )
+        return data
