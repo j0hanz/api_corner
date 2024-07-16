@@ -19,6 +19,8 @@ class Bookmark(models.Model):
     class Meta:
         unique_together = ('owner', 'post')
         ordering = ['-created_at']
+        verbose_name = 'Bookmark'
+        verbose_name_plural = 'Bookmarks'
 
     def __str__(self):
-        return f'Bookmark {self.id} by {self.owner.username} for Post {self.post.id}'
+        return f'Bookmark by {self.owner.username} for Post {self.post.id}'

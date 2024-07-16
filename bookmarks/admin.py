@@ -4,6 +4,10 @@ from .models import Bookmark
 
 @admin.register(Bookmark)
 class BookmarkAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for the Bookmark model.
+    """
+
     list_display = ('id', 'owner', 'post', 'created_at')
     list_filter = ('owner', 'post', 'created_at')
     search_fields = ('owner__username', 'post__content')
