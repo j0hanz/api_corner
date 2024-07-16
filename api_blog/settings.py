@@ -30,6 +30,7 @@ DEBUG = 'DEV' in os.environ
 # Allowed hosts
 ALLOWED_HOSTS = [
     'localhost',
+    'api-corner-44c2f4d4313e.herokuapp.com',
 ]
 
 # CSRF trusted origins
