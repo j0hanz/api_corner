@@ -80,5 +80,24 @@
   "workbench.iconTheme": "vscode-icons",
   "git.autofetch": true,
   "explorer.confirmDragAndDrop": false,
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  "github.copilot.advanced": {
+    "github.copilot.enable": true,
+    "editor.inlineSuggest.enabled": true,
+    "editor.inlineSuggest.acceptKeybinding": "Tab",
+    "editor.inlineSuggest.rejectKeybinding": "Escape",
+    "github.copilot.suggestion.behavior": "block",
+    "github.copilot.maxSuggestions": 5,
+    "github.copilot.autoComplete": true,
+    "github.copilot.suggestionDelay": 500,
+    "github.copilot.ignoreFiles": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**"
+    ],
+    "github.copilot.suggestion.displayMode": "dark",
+    "github.copilot.aggressiveness": "high"
+  },
+  "github.copilot.chat.welcomeMessage": "never",
+  "github.copilot.chat.localeOverride": "en"
 }
