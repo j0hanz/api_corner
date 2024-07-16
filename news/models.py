@@ -8,14 +8,10 @@ class News(models.Model):
     Model representing a news article.
     """
 
-    CATEGORY_UPDATE = 'update'
-    CATEGORY_GENERAL_NEWS = 'general_news'
-    CATEGORY_IMPORTANT = 'important'
-
     CATEGORY_CHOICES = [
-        (CATEGORY_UPDATE, 'Update'),
-        (CATEGORY_GENERAL_NEWS, 'General News'),
-        (CATEGORY_IMPORTANT, 'Important'),
+        ('update', 'Update'),
+        ('general_news', 'General News'),
+        ('important', 'Important'),
     ]
 
     title = models.CharField(max_length=255)
