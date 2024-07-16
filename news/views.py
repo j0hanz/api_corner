@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import News
 from .serializers import NewsSerializer
-from api_blog.permissions import IsOwnerOrReadOnly
+from api_blog.permissions import IsAuthorOrReadOnly
 
 
 class NewsListCreateView(generics.ListCreateAPIView):
@@ -34,7 +34,7 @@ class NewsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly,
+        IsAuthorOrReadOnly,
     ]
     queryset = News.objects.all()
     serializer_class = NewsSerializer
