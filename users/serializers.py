@@ -37,11 +37,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     favorite_movie_genre = FavoriteMovieGenreSerializer(allow_null=True)
     favorite_music_genre = FavoriteMusicGenreSerializer(allow_null=True)
     favorite_sport = FavoriteSportSerializer(allow_null=True)
+    posts_count = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
 
     def get_is_owner(self, obj):
-        request = self.context['request']
+        request = self.context.get('request')
         return request.user == obj.owner
 
     def update_nested_instance(self, related_instance, data, model_class):
@@ -109,6 +110,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
             'is_owner',
+            'posts_count',
             'followers_count',
             'following_count',
         ]
