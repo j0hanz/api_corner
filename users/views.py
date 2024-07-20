@@ -1,16 +1,37 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
-from .models import Profile
-from .serializers import ProfileSerializer
+from .models import (
+    Profile,
+    FavoriteMovieGenre,
+    FavoriteMusicGenre,
+    FavoriteSport,
+)
+from .serializers import (
+    ProfileSerializer,
+    FavoriteMovieGenreSerializer,
+    FavoriteMusicGenreSerializer,
+    FavoriteSportSerializer,
+)
 from api_blog.permissions import IsOwnerOrReadOnly
 
 
-class ProfileList(generics.ListAPIView):
-    """
-    View for listing profiles.
-    """
+class FavoriteMovieGenreList(generics.ListAPIView):
+    queryset = FavoriteMovieGenre.objects.all()
+    serializer_class = FavoriteMovieGenreSerializer
 
+
+class FavoriteMusicGenreList(generics.ListAPIView):
+    queryset = FavoriteMusicGenre.objects.all()
+    serializer_class = FavoriteMusicGenreSerializer
+
+
+class FavoriteSportList(generics.ListAPIView):
+    queryset = FavoriteSport.objects.all()
+    serializer_class = FavoriteSportSerializer
+
+
+class ProfileList(generics.ListAPIView):
     queryset = Profile.objects.annotate(
         posts_count=Count('owner__posts', distinct=True),
         followers_count=Count('owner__followers', distinct=True),
@@ -32,10 +53,6 @@ class ProfileList(generics.ListAPIView):
 
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    View for retrieving, updating, and deleting profiles.
-    """
-
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Profile.objects.annotate(
         posts_count=Count('owner__posts', distinct=True),
