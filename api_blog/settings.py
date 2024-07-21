@@ -18,6 +18,11 @@ import dj_database_url
 if os.path.isfile('env.py'):
     import env
 
+# Cloudinary settings
+CLOUDINARY_STORAGE = {'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')}
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 # Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -73,6 +78,8 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'corsheaders',
     'taggit',
+    'cloudinary',
+    'cloudinary_storage',
     'users',
     'posts',
     'reports',
