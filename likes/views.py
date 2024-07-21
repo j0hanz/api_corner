@@ -6,14 +6,14 @@ from api_blog.permissions import IsOwnerOrReadOnly
 
 class LikeListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Like.objects.all().order_by('-created_at')
     serializer_class = LikeSerializer
+    queryset = Like.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 
-class LikeRetrieveDestroyView(generics.RetrieveDestroyAPIView):
+class LikeDetail(generics.RetrieveDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Like.objects.all()
     serializer_class = LikeSerializer
+    queryset = Like.objects.all()

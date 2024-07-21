@@ -3,8 +3,36 @@ from .models import Like
 
 
 class LikeSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Like model.
+    Includes logic to prevent duplicate likes.
+    """
+
     owner = serializers.ReadOnlyField(source='owner.username')
+
+    def create(self, validated_data):
+        """
+        Creates a Like instance.
+        Checks if the user already liked the post or comment.
+        Throws an error if the user already liked that instance.
+        """
+        owner = self.context['request'].user
+        post = validated_data.get('post')
+        comment = validated_data.get('comment')
+
+        if Like.objects.filter(
+            owner=owner, post=post, comment=comment
+        ).exists():
+            raise serializers.ValidationError('You already liked this')
+
+        return super().create(validated_data)
 
     class Meta:
         model = Like
-        fields = ['id', 'owner', 'post', 'comment', 'created_at']
+        fields = [
+            'id',
+            'owner',
+            'post',
+            'comment',
+            'created_at',
+        ]
