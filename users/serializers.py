@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Profile
 from pathlib import Path
+from cloudinary.uploader import destroy
 
 
 class ProfileSerializer(serializers.ModelSerializer):
