@@ -1,6 +1,21 @@
-from django.contrib.humanize.templatetags.humanize import naturaltime
 from rest_framework import serializers
+from pathlib import Path
 from .models import Comment
+import datetime
+
+
+def shortnaturaltime(value):
+    now = datetime.datetime.now(datetime.timezone.utc)
+    delta = now - value
+
+    if delta < datetime.timedelta(minutes=1):
+        return 'just now'
+    elif delta < datetime.timedelta(hours=1):
+        return f'{int(delta.total_seconds() // 60)}m'
+    elif delta < datetime.timedelta(days=1):
+        return f'{int(delta.total_seconds() // 3600)}h'
+    else:
+        return f'{delta.days}d'
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -34,10 +49,10 @@ class CommentSerializer(serializers.ModelSerializer):
         return request.user == obj.owner
 
     def get_created_at(self, obj):
-        return naturaltime(obj.created_at)
+        return shortnaturaltime(obj.created_at)
 
     def get_updated_at(self, obj):
-        return naturaltime(obj.updated_at)
+        return shortnaturaltime(obj.updated_at)
 
 
 class CommentDetailSerializer(CommentSerializer):
