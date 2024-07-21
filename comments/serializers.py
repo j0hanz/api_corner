@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from pathlib import Path
 from .models import Comment
 import datetime
+from likes.models import Like
 
 
 def shortnaturaltime(value):
@@ -27,6 +27,8 @@ class CommentSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
+    like_id = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
 
@@ -42,11 +44,33 @@ class CommentSerializer(serializers.ModelSerializer):
             'is_owner',
             'profile_id',
             'profile_image',
+            'like_id',
+            'likes_count',
         ]
 
     def get_is_owner(self, obj):
         request = self.context['request']
         return request.user == obj.owner
+
+    def get_like_id(self, obj):
+        """
+        Gets the like id if the user has liked the comment.
+        If user is not authenticated, or has not liked the comment,
+        return None.
+        """
+        user = self.context['request'].user
+        if user.is_authenticated:
+            like = Like.objects.filter(owner=user, comment=obj).first()
+            return like.id if like else None
+        return None
+
+    def get_likes_count(self, obj):
+        """
+        Returns the number of likes for the comment.
+        "likes" is referencing the Like model, connected to the Comment model,
+        through related_name="likes".
+        """
+        return obj.likes.count()
 
     def get_created_at(self, obj):
         return shortnaturaltime(obj.created_at)

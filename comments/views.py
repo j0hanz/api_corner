@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, permissions
+from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Comment
 from .serializers import CommentSerializer, CommentDetailSerializer
@@ -10,17 +11,13 @@ class CommentListCreateView(generics.ListCreateAPIView):
     View for listing and creating comments.
     """
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Comment.objects.all().order_by('-created_at')
     serializer_class = CommentSerializer
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.OrderingFilter,
-        filters.SearchFilter,
-    ]
-    filterset_fields = ['post', 'owner']
-    search_fields = ['owner__username', 'post__content', 'content']
-    ordering_fields = ['created_at', 'owner', 'post']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Comment.objects.annotate(
+        likes_count=Count('likes'),
+    ).order_by('-created_at')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['post']
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -32,9 +29,6 @@ class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     Only the owner can update or delete the comment.
     """
 
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly,
-    ]
-    queryset = Comment.objects.all()
     serializer_class = CommentDetailSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+    queryset = Comment.objects.all()
