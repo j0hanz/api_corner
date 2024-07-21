@@ -15,6 +15,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         return request.user == obj.owner
 
     def update(self, instance, validated_data):
+        image = validated_data.get('image', None)
+        if image and instance.image:
+            destroy(instance.image.public_id)
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
