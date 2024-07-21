@@ -11,30 +11,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
 
-    def get_is_owner(self, obj):
-        request = self.context['request']
-        return request.user == obj.owner
-
-    def update(self, instance, validated_data):
-        image = validated_data.get('image', None)
-        if image and instance.image:
-            destroy(instance.image.public_id)
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        return instance
-
-    def validate_image(self, value):
-        path = Path(value.name)
-        file_extension = path.suffix.lower()
-        valid_extensions = ['.jpg', '.jpeg', '.png']
-        if file_extension not in valid_extensions:
-            raise serializers.ValidationError(
-                'Image must be jpg, jpeg, or png!'
-            )
-        return value
-
     class Meta:
         model = Profile
         fields = [
@@ -55,3 +31,26 @@ class ProfileSerializer(serializers.ModelSerializer):
             'following_count',
         ]
         read_only_fields = ['owner', 'created_at', 'updated_at']
+
+    def get_is_owner(self, obj):
+        request = self.context.get('request')
+        return request.user == obj.owner if request else False
+
+    def update(self, instance, validated_data):
+        image = validated_data.get('image')
+        if image and instance.image:
+            destroy(instance.image.public_id)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+    def validate_image(self, value):
+        path = Path(value.name)
+        valid_extensions = ['.jpg', '.jpeg', '.png']
+        if path.suffix.lower() not in valid_extensions:
+            raise serializers.ValidationError(
+                'Image must be jpg, jpeg, or png!'
+            )
+        return value
