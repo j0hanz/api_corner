@@ -23,9 +23,18 @@ class PostListCreateView(generics.ListCreateAPIView):
         filters.SearchFilter,
         DjangoFilterBackend,
     ]
-    filterset_fields = ['owner__profile', 'tags__name', 'content']
+    filterset_fields = [
+        'owner__profile',
+        'likes__owner__profile',
+        'tags__name',
+        'content',
+    ]
     search_fields = ['owner__username', 'content', 'tags__name']
-    ordering_fields = ['created_at', 'likes_count', 'comments_count']
+    ordering_fields = [
+        'likes_count',
+        'comments_count',
+        'likes__created_at',
+    ]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

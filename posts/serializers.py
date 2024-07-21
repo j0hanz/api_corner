@@ -27,7 +27,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     tags = TagListSerializerField()
     like_id = serializers.SerializerMethodField()
-    likes_count = serializers.ReadOnlyField()
+    likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
@@ -67,7 +67,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         If user is not authenticated, or has not liked the post,
         return None.
         """
-        user = self.context.get('request').user
+        user = self.context['request'].user
         if user.is_authenticated:
             like = Like.objects.filter(owner=user, post=obj).first()
             return like.id if like else None
