@@ -27,7 +27,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     profile_image = serializers.ReadOnlyField(source='owner.profile.image.url')
     tags = TagListSerializerField()
     like_id = serializers.SerializerMethodField()
-    likes_count = serializers.SerializerMethodField()
+    likes_count = serializers.ReadOnlyField()
     comments_count = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()

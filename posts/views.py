@@ -27,9 +27,6 @@ class PostListCreateView(generics.ListCreateAPIView):
     search_fields = ['owner__username', 'content', 'tags__name']
     ordering_fields = ['created_at', 'likes_count', 'comments_count']
 
-    def get_queryset(self):
-        return super().get_queryset()
-
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
