@@ -1,18 +1,8 @@
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
-from .models import (
-    Profile,
-    FavoriteMovieGenre,
-    FavoriteMusicGenre,
-    FavoriteSport,
-)
-from .serializers import (
-    ProfileSerializer,
-    FavoriteMovieGenreSerializer,
-    FavoriteMusicGenreSerializer,
-    FavoriteSportSerializer,
-)
+from .models import Profile
+from .serializers import ProfileSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
 
 
@@ -53,30 +43,3 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         following_count=Count('owner__following', distinct=True),
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
-
-
-class FavoriteMovieGenreList(generics.ListAPIView):
-    """
-    View for listing favorite movie genres.
-    """
-
-    queryset = FavoriteMovieGenre.objects.all()
-    serializer_class = FavoriteMovieGenreSerializer
-
-
-class FavoriteMusicGenreList(generics.ListAPIView):
-    """
-    View for listing favorite music genres.
-    """
-
-    queryset = FavoriteMusicGenre.objects.all()
-    serializer_class = FavoriteMusicGenreSerializer
-
-
-class FavoriteSportList(generics.ListAPIView):
-    """
-    View for listing favorite sports.
-    """
-
-    queryset = FavoriteSport.objects.all()
-    serializer_class = FavoriteSportSerializer
