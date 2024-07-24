@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from .models import Profile
-from pathlib import Path
 from cloudinary.uploader import destroy
-from cloudinary import CloudinaryResource  # Import CloudinaryResource
 import logging
 
 logger = logging.getLogger(__name__)
@@ -63,16 +61,3 @@ class ProfileSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
-
-    def validate_image(self, value):
-        """
-        Validate the image field to ensure it has a valid extension.
-        """
-        valid_extensions = {'.jpg', '.jpeg', '.png', '.gif'}
-        if value and isinstance(value, CloudinaryResource):
-            extension = Path(value.public_id).suffix.lower()
-            if extension not in valid_extensions:
-                raise serializers.ValidationError(
-                    'Invalid file extension. Supported extensions are: jpg, jpeg, png, gif'
-                )
-        return value
