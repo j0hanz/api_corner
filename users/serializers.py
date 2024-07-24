@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Profile
 from pathlib import Path
 from cloudinary.uploader import destroy
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -33,13 +36,26 @@ class ProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['owner', 'created_at', 'updated_at']
 
     def get_is_owner(self, obj):
+        """
+        Check if the request user is the owner of the profile.
+        """
         request = self.context.get('request')
-        return request.user == obj.owner if request else False
+        return request and request.user == obj.owner
 
     def update(self, instance, validated_data):
-        image = validated_data.get('image')
-        if image and instance.image:
-            destroy(instance.image.public_id)
+        """
+        Update profile and handle image replacement in Cloudinary.
+        """
+        new_image = validated_data.get('image')
+        if (
+            new_image
+            and instance.image
+            and hasattr(instance.image, 'public_id')
+        ):
+            try:
+                destroy(instance.image.public_id)
+            except Exception as e:
+                logger.error(f"Error destroying old image: {e}")
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -47,10 +63,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         return instance
 
     def validate_image(self, value):
-        path = Path(value.name)
-        valid_extensions = ['.jpg', '.jpeg', '.png']
-        if path.suffix.lower() not in valid_extensions:
+        """
+        Validate the image field to ensure it has a valid extension.
+        """
+        valid_extensions = {'.jpg', '.jpeg', '.png', '.gif'}
+        if value and Path(value.name).suffix.lower() not in valid_extensions:
             raise serializers.ValidationError(
-                'Image must be jpg, jpeg, or png!'
+                'Invalid file extension. Supported extensions are: jpg, jpeg, png, gif'
             )
         return value
