@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Profile
-from cloudinary.uploader import destroy
 import logging
 
 logger = logging.getLogger(__name__)
@@ -44,18 +43,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """
-        Update profile and handle image replacement in Cloudinary.
+        Update profile and handle image replacement.
         """
         new_image = validated_data.get('image')
-        if (
-            new_image
-            and instance.image
-            and hasattr(instance.image, 'public_id')
-        ):
+        if new_image and instance.image:
             try:
-                destroy(instance.image.public_id)
+                instance.image.delete(save=False)
             except Exception as e:
-                logger.error(f"Error destroying old image: {e}")
+                logger.error(f"Error deleting old image: {e}")
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
