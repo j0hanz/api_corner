@@ -21,17 +21,27 @@ class Post(models.Model):
         ('xpro2', 'X-pro II'),
     ]
 
-    content = models.TextField(max_length=500)
+    content = models.TextField(max_length=500, verbose_name='Content')
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="posts"
+        User,
+        on_delete=models.CASCADE,
+        related_name="posts",
+        verbose_name='Owner',
     )
-    image = models.ImageField(upload_to='images/', blank=True)
+    image = models.ImageField(
+        upload_to='images/', blank=True, verbose_name='Image'
+    )
     image_filter = models.CharField(
-        max_length=32, choices=IMAGE_FILTER_CHOICES, default='normal'
+        max_length=32,
+        choices=IMAGE_FILTER_CHOICES,
+        default='normal',
+        verbose_name='Image Filter',
     )
-    tags = TaggableManager(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    tags = TaggableManager(blank=True, verbose_name='Tags')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Created At'
+    )
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated At')
 
     class Meta:
         ordering = ['-created_at']
