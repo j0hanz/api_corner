@@ -1,51 +1,35 @@
 from django.db import models
 from django.contrib.auth.models import User
-from taggit.managers import TaggableManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from cloudinary.models import CloudinaryField
 
 
-class Post(models.Model):
-    IMAGE_FILTER_CHOICES = [
-        ('_1977', '1977'),
-        ('brannan', 'Brannan'),
-        ('earlybird', 'Earlybird'),
-        ('hudson', 'Hudson'),
-        ('inkwell', 'Inkwell'),
-        ('lofi', 'Lo-Fi'),
-        ('kelvin', 'Kelvin'),
-        ('normal', 'Normal'),
-        ('nashville', 'Nashville'),
-        ('rise', 'Rise'),
-        ('toaster', 'Toaster'),
-        ('valencia', 'Valencia'),
-        ('walden', 'Walden'),
-        ('xpro2', 'X-pro II'),
-    ]
-
-    content = models.TextField(max_length=500, verbose_name='Content')
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="posts",
-        verbose_name='Owner',
+class Profile(models.Model):
+    owner = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='profile'
     )
-    image = CloudinaryField('image', blank=True, verbose_name='Image')
-    image_filter = models.CharField(
-        max_length=32,
-        choices=IMAGE_FILTER_CHOICES,
-        default='normal',
-        verbose_name='Image Filter',
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+    bio = models.TextField(blank=True)
+    image = CloudinaryField(
+        'image', default='images/nobody_ceyo72', blank=True
     )
-    tags = TaggableManager(blank=True, verbose_name='Tags')
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name='Created At'
-    )
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated At')
+    location = models.CharField(max_length=100, blank=True)
+    url_link = models.URLField(blank=True)
+    contact_email = models.EmailField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = "Post"
-        verbose_name_plural = "Posts"
 
     def __str__(self):
-        return f'Post {self.id} by {self.owner.username}'
+        return f"{self.owner.username}'s profile"
+
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(owner=instance)

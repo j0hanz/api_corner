@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
+from cloudinary.models import CloudinaryField
 
 
 class Post(models.Model):
@@ -21,27 +22,17 @@ class Post(models.Model):
         ('xpro2', 'X-pro II'),
     ]
 
-    content = models.TextField(max_length=500, verbose_name='Content')
+    content = models.TextField(max_length=500)
     owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="posts",
-        verbose_name='Owner',
+        User, on_delete=models.CASCADE, related_name="posts"
     )
-    image = models.ImageField(
-        upload_to='images/', blank=True, verbose_name='Image'
-    )
+    image = CloudinaryField('image', blank=True)
     image_filter = models.CharField(
-        max_length=32,
-        choices=IMAGE_FILTER_CHOICES,
-        default='normal',
-        verbose_name='Image Filter',
+        max_length=32, choices=IMAGE_FILTER_CHOICES, default='normal'
     )
-    tags = TaggableManager(blank=True, verbose_name='Tags')
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name='Created At'
-    )
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated At')
+    tags = TaggableManager(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
