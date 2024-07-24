@@ -9,14 +9,18 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('comments', '0001_initial'),
+        ('bookmarks', '0001_initial'),
         ('posts', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
+            model_name='bookmark',
             name='post',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='posts.post'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bookmarked_by', to='posts.post'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='bookmark',
+            unique_together={('owner', 'post')},
         ),
     ]
