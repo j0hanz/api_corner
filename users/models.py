@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from cloudinary.models import CloudinaryField
 
 
 class Profile(models.Model):
@@ -12,8 +11,8 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     bio = models.TextField(blank=True)
-    image = CloudinaryField(
-        'image', default='images/nobody_ceyo72', blank=True
+    image = models.ImageField(
+        upload_to='images/', default='images/nobody_ceyo72', blank=True
     )
     location = models.CharField(max_length=100, blank=True)
     url_link = models.URLField(blank=True)
