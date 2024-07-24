@@ -18,11 +18,6 @@ import dj_database_url
 if os.path.isfile('env.py'):
     import env
 
-# Cloudinary settings
-CLOUDINARY_STORAGE = {'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')}
-MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 # Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,6 +54,11 @@ else:
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 
+# Cloudinary settings
+CLOUDINARY_STORAGE = {'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')}
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 # Installed applications
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'taggit',
     'cloudinary',
     'cloudinary_storage',
+    'django_extensions',
     'users',
     'posts',
     'reports',
