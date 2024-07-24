@@ -30,6 +30,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     comments_count = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
+    filtered_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -48,6 +49,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'like_id',
             'likes_count',
             'comments_count',
+            'filtered_image_url',
         ]
 
     def get_is_owner(self, obj):
@@ -91,6 +93,15 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         Return the number of comments for the post.
         """
         return obj.comments.count()
+
+    def get_filtered_image_url(self, obj):
+        """
+        Return the URL of the image with the applied filter.
+        """
+        if obj.image:
+            # Assuming you have a way to apply the filter to the image URL
+            return f"{obj.image.url}?filter={obj.image_filter}"
+        return ''
 
     def validate_image(self, value):
         """
