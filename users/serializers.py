@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Profile
 from pathlib import Path
 from cloudinary.uploader import destroy
+from cloudinary import CloudinaryResource  # Import CloudinaryResource
 import logging
 
 logger = logging.getLogger(__name__)
@@ -17,6 +18,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
+            'id',
             'owner',
             'first_name',
             'last_name',
@@ -33,7 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'followers_count',
             'following_count',
         ]
-        read_only_fields = ['owner', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'owner', 'created_at', 'updated_at']
 
     def get_is_owner(self, obj):
         """
@@ -67,8 +69,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         Validate the image field to ensure it has a valid extension.
         """
         valid_extensions = {'.jpg', '.jpeg', '.png', '.gif'}
-        if value and Path(value.name).suffix.lower() not in valid_extensions:
-            raise serializers.ValidationError(
-                'Invalid file extension. Supported extensions are: jpg, jpeg, png, gif'
-            )
+        if value and isinstance(value, CloudinaryResource):
+            extension = Path(value.public_id).suffix.lower()
+            if extension not in valid_extensions:
+                raise serializers.ValidationError(
+                    'Invalid file extension. Supported extensions are: jpg, jpeg, png, gif'
+                )
         return value
