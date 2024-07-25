@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
 from .models import Follower
 from .serializers import FollowerSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
@@ -9,7 +9,7 @@ class FollowerListCreateView(generics.ListCreateAPIView):
     View for listing and creating follower relationships.
     """
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Follower.objects.all().order_by('-created_at')
     serializer_class = FollowerSerializer
 

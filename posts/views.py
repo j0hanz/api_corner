@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 from .models import Post
@@ -13,7 +13,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     """
 
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Post.objects.annotate(
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comments', distinct=True),

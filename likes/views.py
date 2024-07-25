@@ -1,11 +1,11 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
 from .models import Like
 from .serializers import LikeSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class LikeListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = LikeSerializer
     queryset = Like.objects.all()
 

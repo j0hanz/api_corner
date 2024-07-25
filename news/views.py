@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import News
 from .serializers import NewsSerializer
@@ -10,7 +10,7 @@ class NewsListCreateView(generics.ListCreateAPIView):
     View for listing and creating news articles.
     """
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthorOrReadOnly]
     queryset = News.objects.all().order_by('-published_at')
     serializer_class = NewsSerializer
     filter_backends = [
@@ -33,7 +33,6 @@ class NewsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
 
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
         IsAuthorOrReadOnly,
     ]
     queryset = News.objects.all()

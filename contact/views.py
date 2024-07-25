@@ -1,6 +1,7 @@
-from rest_framework import generics, permissions, throttling
+from rest_framework import generics, throttling
 from .models import Contact
 from .serializers import ContactSerializer
+from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class ContactListCreateView(generics.ListCreateAPIView):
@@ -8,7 +9,7 @@ class ContactListCreateView(generics.ListCreateAPIView):
     View for listing and creating contact messages.
     """
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ContactSerializer
     throttle_classes = [throttling.UserRateThrottle]
 
@@ -26,7 +27,7 @@ class ContactRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     View for retrieving and updating a contact message.
     """
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ContactSerializer
     throttle_classes = [throttling.UserRateThrottle]
 

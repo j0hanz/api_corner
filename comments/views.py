@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Comment
@@ -12,7 +12,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
     """
 
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Comment.objects.annotate(
         likes_count=Count('likes'),
     ).order_by('-created_at')

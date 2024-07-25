@@ -1,7 +1,8 @@
-from rest_framework import generics, permissions, filters, serializers
+from rest_framework import generics, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Report
 from .serializers import ReportSerializer
+from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class ReportListCreateView(generics.ListCreateAPIView):
@@ -9,7 +10,7 @@ class ReportListCreateView(generics.ListCreateAPIView):
     View for listing and creating reports.
     """
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Report.objects.all().order_by('-reported_at')
     serializer_class = ReportSerializer
     filter_backends = [
