@@ -8,8 +8,7 @@ from api_blog.permissions import IsOwnerOrReadOnly
 
 class PostListCreateView(generics.ListCreateAPIView):
     """
-    View for listing and creating posts.
-    A post can be created by an authenticated user.
+    List and create posts. Only authenticated users can create posts.
     """
 
     serializer_class = PostSerializer
@@ -42,8 +41,7 @@ class PostListCreateView(generics.ListCreateAPIView):
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
-    View for retrieving, updating, and deleting a single post.
-    Only the owner can update or delete the post.
+    Retrieve, update, and delete a single post. Only the owner can modify it.
     """
 
     serializer_class = PostSerializer
