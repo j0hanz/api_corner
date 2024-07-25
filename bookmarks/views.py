@@ -13,11 +13,12 @@ class BookmarkListCreate(generics.ListCreateAPIView):
     serializer_class = BookmarkSerializer
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return Bookmark.objects.filter(owner=self.request.user).order_by(
-                '-created_at'
-            )
-        return Bookmark.objects.none()
+        user = self.request.user
+        return (
+            Bookmark.objects.filter(owner=user).order_by('-created_at')
+            if user.is_authenticated
+            else Bookmark.objects.none()
+        )
 
 
 class BookmarkDetail(generics.RetrieveDestroyAPIView):

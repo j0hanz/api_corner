@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Bookmark
-from posts.models import Post
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
@@ -24,11 +23,12 @@ class BookmarkSerializer(serializers.ModelSerializer):
         owner = self.context['request'].user
         post = data.get('post')
         if Bookmark.objects.filter(owner=owner, post=post).exists():
-            raise serializers.ValidationError(
-                'You already bookmarked this post'
-            )
+            existing_bookmark = Bookmark.objects.get(owner=owner, post=post)
+            data['existing_bookmark'] = existing_bookmark
         return data
 
     def create(self, validated_data):
+        if 'existing_bookmark' in validated_data:
+            return validated_data['existing_bookmark']
         validated_data['owner'] = self.context['request'].user
         return super().create(validated_data)
