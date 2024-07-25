@@ -8,13 +8,11 @@ class Bookmark(models.Model):
     Model for users to bookmark specific posts.
     """
 
-    owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='bookmarks'
-    )
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='bookmarked_by'
+        Post, on_delete=models.CASCADE, related_name='bookmarks'
     )
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
@@ -23,8 +21,6 @@ class Bookmark(models.Model):
             )
         ]
         ordering = ['-created_at']
-        verbose_name = 'Bookmark'
-        verbose_name_plural = 'Bookmarks'
 
     def __str__(self):
-        return f'Bookmark by {self.owner.username} for Post {self.post.id}'
+        return f'{self.owner} bookmarked {self.post}'
