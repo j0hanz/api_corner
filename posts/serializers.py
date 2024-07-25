@@ -2,6 +2,7 @@ from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 from .models import Post
 from likes.models import Like
+from bookmarks.models import Bookmark
 import datetime
 
 
@@ -31,6 +32,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     like_id = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
+    bookmark_id = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
     filtered_image_url = serializers.SerializerMethodField()
@@ -52,6 +54,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'like_id',
             'likes_count',
             'comments_count',
+            'bookmark_id',
             'filtered_image_url',
         ]
 
@@ -83,6 +86,19 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             like = Like.objects.filter(owner=request.user, post=obj).first()
             return like.id if like else None
+        return None
+
+    def get_bookmark_id(self, obj):
+        """
+        Get the bookmark id if the user has bookmarked the post.
+        Return None if the user is not authenticated or has not bookmarked the post.
+        """
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            bookmark = Bookmark.objects.filter(
+                owner=request.user, post=obj
+            ).first()
+            return bookmark.id if bookmark else None
         return None
 
     def get_likes_count(self, obj):
