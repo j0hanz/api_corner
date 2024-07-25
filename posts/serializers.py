@@ -99,7 +99,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         Return the URL of the image with the applied filter.
         """
         if obj.image:
-            # Assuming you have a way to apply the filter to the image URL
             return f"{obj.image.url}?filter={obj.image_filter}"
         return ''
 
