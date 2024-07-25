@@ -4,6 +4,11 @@ from taggit.managers import TaggableManager
 
 
 class Post(models.Model):
+    """
+    Model representing a post created by a user, with optional image and tags.
+    Includes content, owner, and image filter options.
+    """
+
     IMAGE_FILTER_CHOICES = [
         ('_1977', '1977'),
         ('brannan', 'Brannan'),
