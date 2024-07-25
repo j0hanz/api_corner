@@ -1,4 +1,6 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
+from django.db import IntegrityError
 from .models import Bookmark
 from .serializers import BookmarkSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
@@ -22,7 +24,13 @@ class BookmarkListCreateView(generics.ListCreateAPIView):
         return Bookmark.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        try:
+            serializer.save(owner=self.request.user)
+        except IntegrityError:
+            return Response(
+                {"detail": "You have already bookmarked this post."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class BookmarkRetrieveDestroyView(generics.RetrieveDestroyAPIView):
