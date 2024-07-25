@@ -109,14 +109,17 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         """
         Validate the uploaded image.
         """
-        self._validate_file_size(value)
-        self._validate_image_dimensions(value)
+        if value is not None:
+            self._validate_file_size(value)
+            self._validate_image_dimensions(value)
         return value
 
     def _validate_file_size(self, value):
         """
         Validate the file size of the uploaded image.
         """
+        if value is None:
+            raise serializers.ValidationError('No image uploaded.')
         max_size = 5 * 1024 * 1024
         if value.size > max_size:
             raise serializers.ValidationError('Image size larger than 5MB!')
@@ -125,6 +128,8 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         """
         Validate the dimensions of the uploaded image.
         """
+        if value is None:
+            raise serializers.ValidationError('No image uploaded.')
         max_dimension = 4096
         if (
             value.image.height > max_dimension
