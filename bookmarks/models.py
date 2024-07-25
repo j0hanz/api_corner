@@ -14,10 +14,14 @@ class Bookmark(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='bookmarked_by'
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
-        unique_together = ('owner', 'post')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['owner', 'post'], name='unique_bookmark'
+            )
+        ]
         ordering = ['-created_at']
         verbose_name = 'Bookmark'
         verbose_name_plural = 'Bookmarks'
