@@ -6,6 +6,9 @@ import datetime
 
 
 def shortnaturaltime(value):
+    """
+    Return a human-readable string representing the time delta from now to the given value.
+    """
     now = datetime.datetime.now(datetime.timezone.utc)
     delta = now - value
 
