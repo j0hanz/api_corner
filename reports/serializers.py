@@ -34,12 +34,22 @@ class ReportSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
-        if (
-            not data.get('post')
-            and not data.get('comment')
-            and not data.get('reported_user')
+        """
+        Validate that at least one of post, comment, or reported_user is provided.
+        """
+        if not any(
+            data.get(field) for field in ['post', 'comment', 'reported_user']
         ):
             raise serializers.ValidationError(
                 "Either post, comment, or reported_user must be provided."
             )
         return data
+
+    def create(self, validated_data):
+        """
+        Assign reported_user based on the post owner if post is provided.
+        """
+        post = validated_data.get('post')
+        if post:
+            validated_data['reported_user'] = post.owner
+        return super().create(validated_data)
