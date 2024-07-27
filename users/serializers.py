@@ -11,6 +11,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     posts_count = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -21,6 +22,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'last_name',
             'bio',
             'image',
+            'image_url',
             'location',
             'url_link',
             'contact_email',
@@ -32,7 +34,13 @@ class ProfileSerializer(serializers.ModelSerializer):
             'followers_count',
             'following_count',
         ]
-        read_only_fields = ['id', 'owner', 'created_at', 'updated_at']
+        read_only_fields = [
+            'id',
+            'owner',
+            'created_at',
+            'updated_at',
+            'image_url',
+        ]
 
     def get_is_owner(self, obj):
         """
@@ -41,18 +49,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return request and request.user == obj.owner
 
-    def update(self, instance, validated_data):
+    def get_image_url(self, obj):
         """
-        Update profile and handle image replacement.
+        Get the URL of the profile image.
         """
-        new_image = validated_data.get('image')
-        if new_image and instance.image:
-            try:
-                instance.image.delete(save=False)
-            except Exception as e:
-                logger.error(f"Error deleting old image: {e}")
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        return instance
+        return obj.image.url if obj.image else None
