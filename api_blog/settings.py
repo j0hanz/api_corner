@@ -58,7 +58,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
+    'cloudinary_storage',
     'django.contrib.sites',
+    'cloudinary',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -66,8 +68,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'taggit',
-    'cloudinary',
-    'cloudinary_storage',
     'users',
     'posts',
     'reports',
@@ -154,7 +154,6 @@ USE_TZ = True
 
 # Static files configuration
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files configuration
 MEDIA_URL = '/media/'
