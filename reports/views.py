@@ -35,10 +35,11 @@ class ReportListCreateView(generics.ListCreateAPIView):
     ]
 
     def perform_create(self, serializer):
-        post = self.request.data.get('post')
-        comment = self.request.data.get('comment')
-        reported_user = self.request.data.get('reported_user')
-        if not post and not comment and not reported_user:
+        if (
+            not self.request.data.get('post')
+            and not self.request.data.get('comment')
+            and not self.request.data.get('reported_user')
+        ):
             raise serializers.ValidationError(
                 {
                     "post": "Either post, comment, or reported_user must be provided."
