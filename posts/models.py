@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
+from cloudinary.models import CloudinaryField
 
 
 class Post(models.Model):
@@ -30,7 +31,7 @@ class Post(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="posts"
     )
-    image = models.ImageField(upload_to='posts/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
     image_filter = models.CharField(
         max_length=32, choices=IMAGE_FILTER_CHOICES, default='normal'
     )
