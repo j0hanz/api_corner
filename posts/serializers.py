@@ -117,43 +117,9 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         """
         Return the URL of the image with the applied filter.
         """
-        if obj.image:
-            return f"{obj.image.url}?filter={obj.image_filter}"
-        return ''
-
-    def validate_image(self, value):
-        """
-        Validate the uploaded image.
-        """
-        if value is not None:
-            self._validate_file_size(value)
-            self._validate_image_dimensions(value)
-        return value
-
-    def _validate_file_size(self, value):
-        """
-        Validate the file size of the uploaded image.
-        """
-        if value is None:
-            raise serializers.ValidationError('No image uploaded.')
-        max_size = 5 * 1024 * 1024
-        if value.size > max_size:
-            raise serializers.ValidationError('Image size larger than 5MB!')
-
-    def _validate_image_dimensions(self, value):
-        """
-        Validate the dimensions of the uploaded image.
-        """
-        if value is None:
-            raise serializers.ValidationError('No image uploaded.')
-        max_dimension = 4096
-        if (
-            value.image.height > max_dimension
-            or value.image.width > max_dimension
-        ):
-            raise serializers.ValidationError(
-                'Image dimensions larger than 4096px!'
-            )
+        return (
+            f"{obj.image.url}?filter={obj.image_filter}" if obj.image else ''
+        )
 
     def validate_content(self, value):
         """
