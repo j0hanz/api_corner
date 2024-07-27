@@ -40,10 +40,17 @@ class Report(models.Model):
         ordering = ['-reported_at']
 
     def __str__(self):
+        """
+        String representation of the Report object.
+        """
+        report_details = []
+
         if self.post:
-            return f'Report {self.id} - Post {self.post.id} by {self.owner.username}'
+            report_details.append(f'Post {self.post.id}')
         if self.comment:
-            return f'Report {self.id} - Comment {self.comment.id} by {self.owner.username}'
+            report_details.append(f'Comment {self.comment.id}')
         if self.reported_user:
-            return f'Report {self.id} - User {self.reported_user.username} by {self.owner.username}'
-        return f'Report {self.id} by {self.owner.username}'
+            report_details.append(f'User {self.reported_user.username}')
+
+        details = " - ".join(report_details) if report_details else "General"
+        return f'Report {self.id} - {details} by {self.owner.username}'
