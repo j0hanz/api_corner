@@ -1,8 +1,5 @@
 from rest_framework import serializers
 from .models import Profile
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
