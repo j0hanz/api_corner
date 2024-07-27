@@ -33,7 +33,7 @@ class Report(models.Model):
         null=True,
         blank=True,
     )
-    reason = models.TextField(blank=False)
+    reason = models.TextField()
     reported_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -42,8 +42,8 @@ class Report(models.Model):
     def __str__(self):
         if self.post:
             return f'Report {self.id} - Post {self.post.id} by {self.owner.username}'
-        elif self.comment:
+        if self.comment:
             return f'Report {self.id} - Comment {self.comment.id} by {self.owner.username}'
-        elif self.reported_user:
+        if self.reported_user:
             return f'Report {self.id} - User {self.reported_user.username} by {self.owner.username}'
         return f'Report {self.id} by {self.owner.username}'
