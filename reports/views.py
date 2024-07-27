@@ -1,6 +1,6 @@
 from rest_framework import generics, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Report
+from .models import Report, Post
 from .serializers import ReportSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
 
@@ -35,14 +35,23 @@ class ReportListCreateView(generics.ListCreateAPIView):
     ]
 
     def perform_create(self, serializer):
-        if (
-            not self.request.data.get('post')
-            and not self.request.data.get('comment')
-            and not self.request.data.get('reported_user')
-        ):
+        post_id = self.request.data.get('post')
+        comment_id = self.request.data.get('comment')
+
+        if not post_id and not comment_id:
             raise serializers.ValidationError(
-                {
-                    "post": "Either post, comment, or reported_user must be provided."
-                }
+                "Either post or comment must be provided."
             )
-        serializer.save(owner=self.request.user)
+
+        if post_id:
+            try:
+                post_instance = Post.objects.get(id=post_id)
+                reported_user = post_instance.owner
+            except Post.DoesNotExist:
+                raise serializers.ValidationError(
+                    "The provided post does not exist."
+                )
+        else:
+            reported_user = None
+
+        serializer.save(owner=self.request.user, reported_user=reported_user)
