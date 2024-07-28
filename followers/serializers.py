@@ -16,6 +16,10 @@ class FollowerSerializer(serializers.ModelSerializer):
         fields = ['id', 'follower', 'created_at', 'followed', 'followed_name']
 
     def create(self, validated_data):
+        """
+        Creates a Follower instance.
+        Raises an error if the relationship already exists.
+        """
         try:
             return super().create(validated_data)
         except IntegrityError:

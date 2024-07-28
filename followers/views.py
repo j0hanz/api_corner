@@ -4,13 +4,12 @@ from .serializers import FollowerSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
 
 
-class FollowerListCreateView(generics.ListCreateAPIView):
+class FollowerListCreateView(generics.CreateAPIView):
     """
-    View for listing and creating follower relationships.
+    View for creating follower relationships.
     """
 
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Follower.objects.all().order_by('-created_at')
     serializer_class = FollowerSerializer
 
     def perform_create(self, serializer):
@@ -23,5 +22,5 @@ class FollowerRetrieveDestroyView(generics.RetrieveDestroyAPIView):
     """
 
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Follower.objects.all()
+    queryset = Follower.objects.select_related('follower', 'followed')
     serializer_class = FollowerSerializer
