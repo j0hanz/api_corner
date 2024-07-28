@@ -5,7 +5,7 @@ from .models import Contact
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     """
-    Register Contact model in the admin panel.
+    Admin panel configuration for the Contact model.
     """
 
     list_display = (
