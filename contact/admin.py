@@ -8,12 +8,20 @@ class ContactAdmin(admin.ModelAdmin):
     Admin panel configuration for the Contact model.
     """
 
+    fields = (
+        'owner',
+        'email',
+        'category',
+        'subject',
+        'message',
+    )
     list_display = (
         'id',
         'owner',
         'email',
         'category',
         'subject',
+        'message',
         'created_at',
     )
     list_filter = ('owner', 'category', 'created_at')
@@ -24,8 +32,8 @@ class ContactAdmin(admin.ModelAdmin):
         'subject',
         'message',
     )
-    ordering = ['-created_at']
+    readonly_fields = ('created_at',)
+    ordering = ('-created_at',)
 
     def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-        return queryset.select_related('owner')
+        return super().get_queryset(request).select_related('owner')
