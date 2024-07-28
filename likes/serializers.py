@@ -10,6 +10,10 @@ class LikeSerializer(serializers.ModelSerializer):
 
     owner = serializers.ReadOnlyField(source='owner.username')
 
+    class Meta:
+        model = Like
+        fields = ['id', 'owner', 'post', 'comment', 'created_at']
+
     def create(self, validated_data):
         """
         Creates a Like instance.
@@ -25,14 +29,5 @@ class LikeSerializer(serializers.ModelSerializer):
         ).exists():
             raise serializers.ValidationError('You already liked this')
 
+        validated_data['owner'] = owner
         return super().create(validated_data)
-
-    class Meta:
-        model = Like
-        fields = [
-            'id',
-            'owner',
-            'post',
-            'comment',
-            'created_at',
-        ]
