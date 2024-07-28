@@ -14,6 +14,24 @@ class LikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = ['id', 'owner', 'post', 'comment', 'created_at']
 
+    def validate(self, data):
+        """
+        Ensure that either post or comment is provided, but not both.
+        """
+        post = data.get('post')
+        comment = data.get('comment')
+
+        if not post and not comment:
+            raise serializers.ValidationError(
+                'Either post or comment must be provided.'
+            )
+        if post and comment:
+            raise serializers.ValidationError(
+                'Only one of post or comment should be provided.'
+            )
+
+        return data
+
     def create(self, validated_data):
         """
         Creates a Like instance.
