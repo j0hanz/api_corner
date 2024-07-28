@@ -1,18 +1,21 @@
 from rest_framework import serializers
 from .models import Comment
-import datetime
 from likes.models import Like
+from datetime import datetime, timezone, timedelta
 
 
 def shortnaturaltime(value):
-    now = datetime.datetime.now(datetime.timezone.utc)
+    """
+    Return a human-readable string representing the time delta from now to the given value.
+    """
+    now = datetime.now(timezone.utc)
     delta = now - value
 
-    if delta < datetime.timedelta(minutes=1):
+    if delta < timedelta(minutes=1):
         return 'just now'
-    elif delta < datetime.timedelta(hours=1):
+    elif delta < timedelta(hours=1):
         return f'{int(delta.total_seconds() // 60)}m'
-    elif delta < datetime.timedelta(days=1):
+    elif delta < timedelta(days=1):
         return f'{int(delta.total_seconds() // 3600)}h'
     else:
         return f'{delta.days}d'
@@ -49,8 +52,7 @@ class CommentSerializer(serializers.ModelSerializer):
         ]
 
     def get_is_owner(self, obj):
-        request = self.context['request']
-        return request.user == obj.owner
+        return self.context['request'].user == obj.owner
 
     def get_like_id(self, obj):
         """

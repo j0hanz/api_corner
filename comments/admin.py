@@ -5,7 +5,7 @@ from .models import Comment
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     """
-    Register Comment model in the admin panel.
+    Admin panel configuration for the Comment model.
     """
 
     list_display = (
@@ -21,5 +21,4 @@ class CommentAdmin(admin.ModelAdmin):
     ordering = ['-created_at']
 
     def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-        return queryset.select_related('owner', 'post')
+        return super().get_queryset(request).select_related('owner', 'post')

@@ -3,21 +3,21 @@ from taggit.serializers import TagListSerializerField, TaggitSerializer
 from .models import Post
 from likes.models import Like
 from bookmarks.models import Bookmark
-import datetime
+from datetime import datetime, timezone, timedelta
 
 
 def shortnaturaltime(value):
     """
     Return a human-readable string representing the time delta from now to the given value.
     """
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.now(timezone.utc)
     delta = now - value
 
-    if delta < datetime.timedelta(minutes=1):
+    if delta < timedelta(minutes=1):
         return 'just now'
-    elif delta < datetime.timedelta(hours=1):
+    elif delta < timedelta(hours=1):
         return f'{int(delta.total_seconds() // 60)}m'
-    elif delta < datetime.timedelta(days=1):
+    elif delta < timedelta(days=1):
         return f'{int(delta.total_seconds() // 3600)}h'
     else:
         return f'{delta.days}d'

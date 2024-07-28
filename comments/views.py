@@ -13,9 +13,9 @@ class CommentListCreateView(generics.ListCreateAPIView):
 
     serializer_class = CommentSerializer
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Comment.objects.annotate(
-        likes_count=Count('likes'),
-    ).order_by('-created_at')
+    queryset = Comment.objects.annotate(likes_count=Count('likes')).order_by(
+        '-created_at'
+    )
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['post']
 
