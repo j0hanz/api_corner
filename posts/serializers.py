@@ -24,6 +24,10 @@ def shortnaturaltime(value):
 
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
+    """
+    Serializer for the Post model.
+    """
+
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')
@@ -63,7 +67,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         Check if the request user is the owner of the post.
         """
         request = self.context.get('request')
-        return request.user == obj.owner if request else False
+        return request and request.user == obj.owner
 
     def get_created_at(self, obj):
         """
@@ -115,11 +119,23 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     def get_filtered_image_url(self, obj):
         """
-        Return the URL of the image with the applied filter.
+        Return the URL of the image with the applied filter using Cloudinary transformations.
         """
-        return (
-            f"{obj.image.url}?filter={obj.image_filter}" if obj.image else ''
-        )
+        if obj.image:
+            transformations = {
+                'GRAYSCALE': 'e_grayscale',
+                'SEPIA': 'e_sepia',
+                'NEGATIVE': 'e_negate',
+                'BRIGHTNESS': 'e_brightness:30',
+                'CONTRAST': 'e_contrast:30',
+            }
+            transformation = transformations.get(obj.image_filter, '')
+            return (
+                f"{obj.image.url}?transformation={transformation}"
+                if transformation
+                else obj.image.url
+            )
+        return ''
 
     def validate_content(self, value):
         """

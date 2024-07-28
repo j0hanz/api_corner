@@ -11,21 +11,14 @@ class Post(models.Model):
     """
 
     IMAGE_FILTER_CHOICES = [
-        ('_1977', '1977'),
-        ('brannan', 'Brannan'),
-        ('earlybird', 'Earlybird'),
-        ('hudson', 'Hudson'),
-        ('inkwell', 'Inkwell'),
-        ('lofi', 'Lo-Fi'),
-        ('kelvin', 'Kelvin'),
-        ('normal', 'Normal'),
-        ('nashville', 'Nashville'),
-        ('rise', 'Rise'),
-        ('toaster', 'Toaster'),
-        ('valencia', 'Valencia'),
-        ('walden', 'Walden'),
-        ('xpro2', 'X-pro II'),
+        ('NONE', 'None'),
+        ('GRAYSCALE', 'Grayscale'),
+        ('SEPIA', 'Sepia'),
+        ('NEGATIVE', 'Negative'),
+        ('BRIGHTNESS', 'Brightness'),
+        ('CONTRAST', 'Contrast'),
     ]
+    DEFAULT_IMAGE_FILTER = 'NONE'
 
     content = models.TextField(max_length=500)
     owner = models.ForeignKey(
@@ -33,7 +26,9 @@ class Post(models.Model):
     )
     image = CloudinaryField('image', blank=True, null=True)
     image_filter = models.CharField(
-        max_length=32, choices=IMAGE_FILTER_CHOICES, default='normal'
+        max_length=20,
+        choices=IMAGE_FILTER_CHOICES,
+        default=DEFAULT_IMAGE_FILTER,
     )
     tags = TaggableManager(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
