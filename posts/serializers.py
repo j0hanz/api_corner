@@ -128,6 +128,21 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
                 'NEGATIVE': 'e_negate',
                 'BRIGHTNESS': 'e_brightness:30',
                 'CONTRAST': 'e_contrast:30',
+                'SATURATION': 'e_saturation:30',
+                'HUE_ROTATE': 'e_hue:90',
+                'BLUR': 'e_blur:200',
+                'SHARPEN': 'e_sharpen',
+                'VINTAGE': 'e_vintage',
+                'VIGNETTE': 'e_vignette:20',
+                'CROSS_PROCESS': 'e_cross_process',
+                'HDR': 'e_hdr',
+                'EDGE_DETECT': 'e_edge_detect',
+                'EMBOSS': 'e_emboss',
+                'SOLARIZE': 'e_solarize',
+                'POSTERIZE': 'e_posterize',
+                'PIXELATE': 'e_pixelate',
+                'CARTOON': 'e_cartoon',
+                'DUOTONE': 'e_duotone',
             }
             transformation = transformations.get(obj.image_filter, '')
             return (

@@ -17,6 +17,21 @@ class Post(models.Model):
         ('NEGATIVE', 'Negative'),
         ('BRIGHTNESS', 'Brightness'),
         ('CONTRAST', 'Contrast'),
+        ('SATURATION', 'Saturation'),
+        ('HUE_ROTATE', 'Hue Rotate'),
+        ('BLUR', 'Blur'),
+        ('SHARPEN', 'Sharpen'),
+        ('VINTAGE', 'Vintage'),
+        ('VIGNETTE', 'Vignette'),
+        ('CROSS_PROCESS', 'Cross Process'),
+        ('HDR', 'HDR'),
+        ('EDGE_DETECT', 'Edge Detect'),
+        ('EMBOSS', 'Emboss'),
+        ('SOLARIZE', 'Solarize'),
+        ('POSTERIZE', 'Posterize'),
+        ('PIXELATE', 'Pixelate'),
+        ('CARTOON', 'Cartoon'),
+        ('DUOTONE', 'Duotone'),
     ]
     DEFAULT_IMAGE_FILTER = 'NONE'
 
