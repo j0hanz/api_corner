@@ -8,23 +8,23 @@ class Follower(models.Model):
     """
 
     follower = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='following'
+        User,
+        on_delete=models.CASCADE,
+        related_name='following',
     )
     followed = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='followers'
+        User,
+        on_delete=models.CASCADE,
+        related_name='followers',
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['follower', 'followed'],
-                name='unique_follower_followed',
-            )
-        ]
+        unique_together = ('follower', 'followed')
         ordering = ['-created_at']
-        verbose_name = 'Follower'
-        verbose_name_plural = 'Followers'
 
     def __str__(self):
-        return f'{self.follower.username} follows {self.followed.username}'
+        """
+        Return a string representation of the follower relationship.
+        """
+        return f"{self.follower} follows {self.followed}"
