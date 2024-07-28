@@ -16,7 +16,12 @@ class Follower(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('follower', 'followed')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['follower', 'followed'],
+                name='unique_follower_followed',
+            )
+        ]
         ordering = ['-created_at']
         verbose_name = 'Follower'
         verbose_name_plural = 'Followers'
