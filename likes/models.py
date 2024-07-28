@@ -28,15 +28,6 @@ class Like(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        constraints = [
-            models.UniqueConstraint(
-                fields=['owner', 'post'], name='unique_like_post'
-            ),
-            models.UniqueConstraint(
-                fields=['owner', 'comment'], name='unique_like_comment'
-            ),
-        ]
-
     def __str__(self):
         if self.post:
             return f'{self.owner.username} likes {self.post}'
