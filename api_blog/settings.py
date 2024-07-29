@@ -125,10 +125,12 @@ if 'DEV' in os.environ:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print("Connected to SQLite database for development")
 else:
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
+    print("Connected to PostgreSQL database for production")
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
