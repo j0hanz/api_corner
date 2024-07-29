@@ -8,21 +8,17 @@ class FollowerSerializer(serializers.ModelSerializer):
     Serializer for the Follower model.
     """
 
-    follower = serializers.ReadOnlyField(source='follower.username')
+    owner = serializers.ReadOnlyField(source='owner.username')
     followed_name = serializers.ReadOnlyField(source='followed.username')
 
     class Meta:
         model = Follower
-        fields = ['id', 'follower', 'created_at', 'followed', 'followed_name']
+        fields = ['id', 'owner', 'followed', 'followed_name', 'created_at']
 
     def create(self, validated_data):
-        """
-        Creates a Follower instance.
-        Raises an error if the relationship already exists.
-        """
         try:
             return super().create(validated_data)
         except IntegrityError:
             raise serializers.ValidationError(
-                {'detail': 'Possible duplicate relationship'}
+                {'detail': 'You are already following this user.'}
             )
