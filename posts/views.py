@@ -6,17 +6,25 @@ from .serializers import PostSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
 
 
-class PostListCreateView(generics.ListCreateAPIView):
+class PostQuerySet(generics.GenericAPIView):
+    """
+    Base queryset for post views.
+    """
+
+    queryset = Post.objects.annotate(
+        likes_count=Count('likes', distinct=True),
+        comments_count=Count('comments', distinct=True),
+    ).order_by('-created_at')
+
+
+class PostListCreateView(PostQuerySet, generics.ListCreateAPIView):
     """
     List and create posts. Only authenticated users can create posts.
     """
 
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Post.objects.annotate(
-        likes_count=Count('likes', distinct=True),
-        comments_count=Count('comments', distinct=True),
-    ).order_by('-created_at')
+
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
@@ -39,14 +47,10 @@ class PostListCreateView(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+class PostDetailView(PostQuerySet, generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update, and delete a single post. Only the owner can modify it.
     """
 
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Post.objects.annotate(
-        likes_count=Count('likes', distinct=True),
-        comments_count=Count('comments', distinct=True),
-    ).order_by('-created_at')
