@@ -41,7 +41,7 @@ class Post(models.Model):
             ('DUOTONE', 'Duotone'),
         ],
     )
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
