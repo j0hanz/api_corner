@@ -6,34 +6,8 @@ from cloudinary.models import CloudinaryField
 
 class Post(models.Model):
     """
-    Model representing a post created by a user, with optional image and tags.
-    Includes content, owner, and image filter options.
+    Post model, representing a post created by a user.
     """
-
-    IMAGE_FILTER_CHOICES = [
-        ('NONE', 'None'),
-        ('GRAYSCALE', 'Grayscale'),
-        ('SEPIA', 'Sepia'),
-        ('NEGATIVE', 'Negative'),
-        ('BRIGHTNESS', 'Brightness'),
-        ('CONTRAST', 'Contrast'),
-        ('SATURATION', 'Saturation'),
-        ('HUE_ROTATE', 'Hue Rotate'),
-        ('BLUR', 'Blur'),
-        ('SHARPEN', 'Sharpen'),
-        ('VINTAGE', 'Vintage'),
-        ('VIGNETTE', 'Vignette'),
-        ('CROSS_PROCESS', 'Cross Process'),
-        ('HDR', 'HDR'),
-        ('EDGE_DETECT', 'Edge Detect'),
-        ('EMBOSS', 'Emboss'),
-        ('SOLARIZE', 'Solarize'),
-        ('POSTERIZE', 'Posterize'),
-        ('PIXELATE', 'Pixelate'),
-        ('CARTOON', 'Cartoon'),
-        ('DUOTONE', 'Duotone'),
-    ]
-    DEFAULT_IMAGE_FILTER = 'NONE'
 
     content = models.TextField(max_length=500)
     owner = models.ForeignKey(
@@ -42,8 +16,30 @@ class Post(models.Model):
     image = CloudinaryField('image', blank=True, null=True)
     image_filter = models.CharField(
         max_length=20,
-        choices=IMAGE_FILTER_CHOICES,
-        default=DEFAULT_IMAGE_FILTER,
+        default='NONE',
+        choices=[
+            ('NONE', 'None'),
+            ('GRAYSCALE', 'Grayscale'),
+            ('SEPIA', 'Sepia'),
+            ('NEGATIVE', 'Negative'),
+            ('BRIGHTNESS', 'Brightness'),
+            ('CONTRAST', 'Contrast'),
+            ('SATURATION', 'Saturation'),
+            ('HUE_ROTATE', 'Hue Rotate'),
+            ('BLUR', 'Blur'),
+            ('SHARPEN', 'Sharpen'),
+            ('VINTAGE', 'Vintage'),
+            ('VIGNETTE', 'Vignette'),
+            ('CROSS_PROCESS', 'Cross Process'),
+            ('HDR', 'HDR'),
+            ('EDGE_DETECT', 'Edge Detect'),
+            ('EMBOSS', 'Emboss'),
+            ('SOLARIZE', 'Solarize'),
+            ('POSTERIZE', 'Posterize'),
+            ('PIXELATE', 'Pixelate'),
+            ('CARTOON', 'Cartoon'),
+            ('DUOTONE', 'Duotone'),
+        ],
     )
     tags = TaggableManager(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
