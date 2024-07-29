@@ -1,11 +1,7 @@
 from django.urls import path
-from .views import FollowerListCreateView, FollowerRetrieveDestroyView
+from .views import FollowerList, FollowerDetail
 
 urlpatterns = [
-    path('', FollowerListCreateView.as_view(), name='follower-list-create'),
-    path(
-        '<int:pk>/',
-        FollowerRetrieveDestroyView.as_view(),
-        name='follower-detail',
-    ),
+    path('', FollowerList.as_view()),
+    path('<int:pk>/', FollowerDetail.as_view()),
 ]
