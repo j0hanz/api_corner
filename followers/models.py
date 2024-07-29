@@ -4,27 +4,24 @@ from django.contrib.auth.models import User
 
 class Follower(models.Model):
     """
-    Model representing the follower relationship between users.
+    Follower model, representing the follower relationship between users.
     """
 
-    follower = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='following',
+    owner = models.ForeignKey(
+        User, related_name='following', on_delete=models.CASCADE
     )
     followed = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='followers',
+        User, related_name='followers', on_delete=models.CASCADE
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('follower', 'followed')
         ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['owner', 'followed'], name='unique_follow'
+            )
+        ]
 
     def __str__(self):
-        """
-        Return a string representation of the follower relationship.
-        """
-        return f"{self.follower} follows {self.followed}"
+        return f'{self.owner} follows {self.followed}'
