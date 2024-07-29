@@ -49,7 +49,6 @@ class ReportSerializer(serializers.ModelSerializer):
         """
         Assign reported_user based on the post owner if post is provided.
         """
-        post = validated_data.get('post')
-        if post:
+        if post := validated_data.get('post'):
             validated_data['reported_user'] = post.owner
         return super().create(validated_data)
