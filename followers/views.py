@@ -1,26 +1,27 @@
 from rest_framework import generics
-from .models import Follower
-from .serializers import FollowerSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
+from followers.models import Follower
+from followers.serializers import FollowerSerializer
 
 
-class FollowerListCreateView(generics.CreateAPIView):
+class FollowerList(generics.ListCreateAPIView):
     """
-    View for creating follower relationships.
+    List all followers for the currently authenticated user.
     """
 
     permission_classes = [IsOwnerOrReadOnly]
+    queryset = Follower.objects.all()
     serializer_class = FollowerSerializer
 
     def perform_create(self, serializer):
-        serializer.save(follower=self.request.user)
+        serializer.save(owner=self.request.user)
 
 
-class FollowerRetrieveDestroyView(generics.RetrieveDestroyAPIView):
+class FollowerDetail(generics.RetrieveDestroyAPIView):
     """
-    View for retrieving and deleting a follower relationship.
+    Retrieve, update or delete a follower instance.
     """
 
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Follower.objects.select_related('follower', 'followed')
+    queryset = Follower.objects.all()
     serializer_class = FollowerSerializer
