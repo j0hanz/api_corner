@@ -6,9 +6,9 @@ from .serializers import ProfileSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
 
 
-class ProfileList(generics.ListAPIView):
+class ProfileQuerySet(generics.ListAPIView):
     """
-    View for listing profiles.
+    Base queryset for listing and detailing profiles.
     """
 
     queryset = Profile.objects.annotate(
@@ -16,12 +16,15 @@ class ProfileList(generics.ListAPIView):
         followers_count=Count('owner__followers', distinct=True),
         following_count=Count('owner__following', distinct=True),
     ).order_by('-created_at')
+
+
+class ProfileList(ProfileQuerySet):
+    """
+    View for listing profiles.
+    """
+
     serializer_class = ProfileSerializer
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
-    filterset_fields = [
-        'owner__following__followed',
-        'owner__followers__follower',
-    ]
     ordering_fields = [
         'posts_count',
         'followers_count',
@@ -30,16 +33,24 @@ class ProfileList(generics.ListAPIView):
         'owner__followers__created_at',
     ]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
 
-class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+        followed_by = self.request.query_params.get('followed_by')
+        followed = self.request.query_params.get('followed')
+
+        if followed_by:
+            queryset = queryset.filter(owner__followers__owner__id=followed_by)
+        if followed:
+            queryset = queryset.filter(owner__following__owner__id=followed)
+
+        return queryset
+
+
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView, ProfileQuerySet):
     """
     View for retrieving, updating, and deleting profiles.
     """
 
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Profile.objects.annotate(
-        posts_count=Count('owner__posts', distinct=True),
-        followers_count=Count('owner__followers', distinct=True),
-        following_count=Count('owner__following', distinct=True),
-    ).order_by('-created_at')
     serializer_class = ProfileSerializer
