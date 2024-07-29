@@ -10,8 +10,10 @@ class ContactCreateView(generics.CreateAPIView):
     """
 
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class ContactListView(generics.ListAPIView):
@@ -20,5 +22,10 @@ class ContactListView(generics.ListAPIView):
     """
 
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+    def get_queryset(self):
+        """
+        Filter the queryset by the current user.
+        """
+        return Contact.objects.filter(owner=self.request.user)
