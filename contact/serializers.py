@@ -32,3 +32,4 @@ class ContactSerializer(serializers.ModelSerializer):
             'message',
             'created_at',
         ]
+        read_only_fields = ['owner', 'created_at']
