@@ -13,22 +13,21 @@ class Like(models.Model):
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
+        related_name='likes',
         blank=True,
         null=True,
-        related_name='likes',
     )
     comment = models.ForeignKey(
         Comment,
         on_delete=models.CASCADE,
+        related_name='likes',
         blank=True,
         null=True,
-        related_name='likes',
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_at']
+
     def __str__(self):
-        if self.post:
-            return f'{self.owner.username} likes {self.post}'
-        return f'{self.owner.username} likes {self.comment}'
+        return f'{self.owner.username} likes {self.post or self.comment}'

@@ -1,33 +1,22 @@
+from django.db import IntegrityError
 from rest_framework import serializers
-from .models import Like
+from likes.models import Like
 
 
 class LikeSerializer(serializers.ModelSerializer):
     """
-    Serializer for the Like model.
-    Includes logic to prevent duplicate likes.
+    Serializer for the Like model
+    The create method handles the unique constraint on 'owner', 'post' and 'comment'
     """
 
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Like
-        fields = ['id', 'owner', 'post', 'comment', 'created_at']
+        fields = ['id', 'created_at', 'owner', 'post', 'comment']
 
     def create(self, validated_data):
-        """
-        Creates a Like instance.
-        Checks if the user already liked the post or comment.
-        Throws an error if the user already liked that instance.
-        """
-        owner = self.context['request'].user
-        post = validated_data.get('post')
-        comment = validated_data.get('comment')
-
-        if Like.objects.filter(
-            owner=owner, post=post, comment=comment
-        ).exists():
-            raise serializers.ValidationError('You already liked this')
-
-        validated_data['owner'] = owner
-        return super().create(validated_data)
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError({'detail': 'Possible duplicate'})

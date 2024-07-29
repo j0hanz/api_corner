@@ -1,17 +1,17 @@
 from rest_framework import generics
-from .models import Like
-from .serializers import LikeSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
+from likes.models import Like
+from likes.serializers import LikeSerializer
 
 
-class LikeListCreateView(generics.ListCreateAPIView):
+class LikeList(generics.ListCreateAPIView):
     """
-    View for listing and creating likes.
+    List likes or create a like if logged in.
     """
 
-    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = LikeSerializer
-    queryset = Like.objects.all().order_by('-created_at')
+    permission_classes = [IsOwnerOrReadOnly]
+    queryset = Like.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -19,9 +19,9 @@ class LikeListCreateView(generics.ListCreateAPIView):
 
 class LikeDetail(generics.RetrieveDestroyAPIView):
     """
-    View for retrieving and deleting a like.
+    Retrieve or destroy a like if you own it.
     """
 
-    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = LikeSerializer
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Like.objects.all()
