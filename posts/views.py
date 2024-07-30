@@ -31,11 +31,11 @@ class PostListCreateView(PostQuerySet, generics.ListCreateAPIView):
         DjangoFilterBackend,
     ]
     filterset_fields = [
+        'owner__followed__owner__profile',
         'owner__profile',
         'likes__owner__profile',
         'tags__name',
         'content',
-        'owner__following__followed_user__profile',
     ]
     search_fields = ['owner__username', 'content', 'tags__name']
     ordering_fields = [
@@ -55,3 +55,7 @@ class PostDetailView(PostQuerySet, generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
+    queryset = Post.objects.annotate(
+        likes_count=Count('likes', distinct=True),
+        comments_count=Count('comments', distinct=True),
+    ).order_by('-created_at')

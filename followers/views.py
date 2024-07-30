@@ -6,14 +6,13 @@ from .serializers import FollowerSerializer
 
 class FollowerList(generics.ListCreateAPIView):
     """
-    List all followers for the currently authenticated user or create a new follower relationship.
+    View for listing and creating followers.
+    Credit: Code Institute django rest walkthrough project
     """
 
     permission_classes = [IsOwnerOrReadOnly]
+    queryset = Follower.objects.all()
     serializer_class = FollowerSerializer
-
-    def get_queryset(self):
-        return Follower.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -21,7 +20,8 @@ class FollowerList(generics.ListCreateAPIView):
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
     """
-    Retrieve or delete a follower relationship.
+    View for retrieving and deleting followers.
+    Credit: Code Institute django rest walkthrough project
     """
 
     permission_classes = [IsOwnerOrReadOnly]

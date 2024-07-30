@@ -1,9 +1,9 @@
 from rest_framework import generics, filters
+from api_blog.permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 from .models import Profile
 from .serializers import ProfileSerializer
-from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class ProfileList(generics.ListAPIView):
@@ -13,14 +13,14 @@ class ProfileList(generics.ListAPIView):
 
     queryset = Profile.objects.annotate(
         posts_count=Count('owner__posts', distinct=True),
-        followers_count=Count('owner__followers', distinct=True),
+        followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True),
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_fields = [
-        'owner__following__followed_user__profile',
-        'owner__followers__owner__profile',
+        'owner__following__followed__profile',
+        'owner__followed__owner__profile',
     ]
     ordering_fields = [
         'posts_count',
@@ -39,7 +39,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Profile.objects.annotate(
         posts_count=Count('owner__posts', distinct=True),
-        followers_count=Count('owner__followers', distinct=True),
+        followers_count=Count('owner__followed', distinct=True),
         following_count=Count('owner__following', distinct=True),
     ).order_by('-created_at')
     serializer_class = ProfileSerializer
