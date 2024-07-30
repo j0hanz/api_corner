@@ -36,20 +36,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         ]
 
     def get_is_owner(self, obj):
-        """
-        Check if the request user is the owner of the profile.
-        """
         request = self.context.get('request')
-        return request.user == obj.owner if request else False
+        return request and request.user == obj.owner
 
     def get_following_id(self, obj):
-        """
-        Get the ID of the following relationship if it exists.
-        """
-        user = self.context.get('request')
+        user = self.context.get('request').user
         if user and user.is_authenticated:
-            try:
-                return Follower.objects.get(owner=user, followed=obj.owner).id
-            except Follower.DoesNotExist:
-                return None
+            following = Follower.objects.filter(
+                owner=user, followed=obj.owner
+            ).first()
+            return following.id if following else None
         return None
