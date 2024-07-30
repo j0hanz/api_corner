@@ -9,11 +9,11 @@ class FollowerSerializer(serializers.ModelSerializer):
     """
 
     owner = serializers.ReadOnlyField(source='owner.username')
-    followed_name = serializers.ReadOnlyField(source='followed.username')
+    followed_user = serializers.ReadOnlyField(source='followed_user.username')
 
     class Meta:
         model = Follower
-        fields = ['id', 'owner', 'created_at', 'followed', 'followed_name']
+        fields = ['id', 'owner', 'followed_user', 'created_at']
 
     def create(self, validated_data):
         try:

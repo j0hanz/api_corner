@@ -35,6 +35,7 @@ class PostListCreateView(PostQuerySet, generics.ListCreateAPIView):
         'likes__owner__profile',
         'tags__name',
         'content',
+        'owner__following__followed_user__profile',
     ]
     search_fields = ['owner__username', 'content', 'tags__name']
     ordering_fields = [
