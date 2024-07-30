@@ -1,12 +1,21 @@
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Count, F
+from django.db.models import Count
 from .models import Profile
 from .serializers import ProfileSerializer
 from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class ProfileList(generics.ListAPIView):
+    """
+    View for listing profiles.
+    """
+
+    queryset = Profile.objects.annotate(
+        posts_count=Count('owner__posts', distinct=True),
+        followers_count=Count('owner__followers', distinct=True),
+        following_count=Count('owner__following', distinct=True),
+    ).order_by('-created_at')
     serializer_class = ProfileSerializer
     filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     filterset_fields = [
@@ -21,31 +30,16 @@ class ProfileList(generics.ListAPIView):
         'owner__followers__created_at',
     ]
 
-    def get_queryset(self):
-        return (
-            Profile.objects.select_related('owner')
-            .annotate(
-                posts_count=Count('owner__posts', distinct=True),
-                followers_count=Count('owner__followers', distinct=True),
-                following_count=Count('owner__following', distinct=True),
-            )
-            .order_by(
-                F('followers_count').desc(nulls_last=True), '-created_at'
-            )
-        )
-
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsOwnerOrReadOnly]
-    serializer_class = ProfileSerializer
+    """
+    View for retrieving, updating, and deleting profiles.
+    """
 
-    def get_queryset(self):
-        return (
-            Profile.objects.select_related('owner')
-            .annotate(
-                posts_count=Count('owner__posts', distinct=True),
-                followers_count=Count('owner__followers', distinct=True),
-                following_count=Count('owner__following', distinct=True),
-            )
-            .order_by('-created_at')
-        )
+    permission_classes = [IsOwnerOrReadOnly]
+    queryset = Profile.objects.annotate(
+        posts_count=Count('owner__posts', distinct=True),
+        followers_count=Count('owner__followers', distinct=True),
+        following_count=Count('owner__following', distinct=True),
+    ).order_by('-created_at')
+    serializer_class = ProfileSerializer
