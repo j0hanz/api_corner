@@ -13,12 +13,10 @@ class FollowerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Follower
-        fields = ['id', 'owner', 'followed', 'followed_name', 'created_at']
+        fields = ['id', 'owner', 'created_at', 'followed', 'followed_name']
 
     def create(self, validated_data):
         try:
             return super().create(validated_data)
         except IntegrityError:
-            raise serializers.ValidationError(
-                {'detail': 'You are already following this user.'}
-            )
+            raise serializers.ValidationError({'detail': 'possible duplicate'})
