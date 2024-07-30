@@ -1,14 +1,16 @@
 from rest_framework import serializers
 from .models import Profile
+from followers.models import Follower
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
+    following_id = serializers.SerializerMethodField()
     posts_count = serializers.ReadOnlyField()
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
-    image_url = serializers.SerializerMethodField()
+    image_url = serializers.ImageField(source='image', read_only=True)
 
     class Meta:
         model = Profile
@@ -28,15 +30,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             'updated_at',
             'is_owner',
             'posts_count',
+            'following_id',
             'followers_count',
             'following_count',
-        ]
-        read_only_fields = [
-            'id',
-            'owner',
-            'created_at',
-            'updated_at',
-            'image_url',
         ]
 
     def get_is_owner(self, obj):
@@ -44,10 +40,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         Check if the request user is the owner of the profile.
         """
         request = self.context.get('request')
-        return request and request.user == obj.owner
+        return request.user == obj.owner if request else False
 
-    def get_image_url(self, obj):
+    def get_following_id(self, obj):
         """
-        Get the URL of the profile image.
+        Get the ID of the following relationship if it exists.
         """
-        return obj.image.url if obj.image else None
+        user = self.context.get('request')
+        if user and user.is_authenticated:
+            try:
+                return Follower.objects.get(owner=user, followed=obj.owner).id
+            except Follower.DoesNotExist:
+                return None
+        return None
