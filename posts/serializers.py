@@ -41,27 +41,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     updated_at = serializers.SerializerMethodField()
     filtered_image_url = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Post
-        fields = [
-            'id',
-            'owner',
-            'is_owner',
-            'profile_id',
-            'profile_image',
-            'content',
-            'image',
-            'image_filter',
-            'tags',
-            'created_at',
-            'updated_at',
-            'like_id',
-            'likes_count',
-            'comments_count',
-            'bookmark_id',
-            'filtered_image_url',
-        ]
-
     def get_is_owner(self, obj):
         """
         Check if the request user is the owner of the post.
@@ -159,3 +138,24 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         if not value.strip():
             raise serializers.ValidationError("Post content cannot be empty.")
         return value
+
+    class Meta:
+        model = Post
+        fields = [
+            'id',
+            'owner',
+            'is_owner',
+            'profile_id',
+            'profile_image',
+            'content',
+            'image',
+            'image_filter',
+            'tags',
+            'created_at',
+            'updated_at',
+            'like_id',
+            'likes_count',
+            'comments_count',
+            'bookmark_id',
+            'filtered_image_url',
+        ]
