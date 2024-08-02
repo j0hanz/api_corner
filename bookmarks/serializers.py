@@ -13,6 +13,9 @@ class BookmarkSerializer(serializers.ModelSerializer):
     post_owner_profile_image = serializers.ReadOnlyField(
         source='post.owner.profile.image.url'
     )
+    post_owner_profile_id = serializers.ReadOnlyField(
+        source='post.owner.profile.id'
+    )
     created_at = serializers.DateTimeField(format='%d %b %Y', read_only=True)
 
     class Meta:
@@ -24,6 +27,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
             'post_content',
             'post_owner',
             'post_owner_profile_image',
+            'post_owner_profile_id',
             'created_at',
         ]
 
