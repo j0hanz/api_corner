@@ -135,11 +135,31 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         """
         Validate that either content or image is present.
         """
-        if not data.get('content') and not data.get('image'):
-            raise serializers.ValidationError(
-                "You must upload an image or write some content."
-            )
+        request = self.context.get('request')
+        if request and request.method in ['PUT', 'PATCH']:
+            instance = self.instance
+            if (
+                not data.get('content')
+                and not data.get('image')
+                and not instance.image
+            ):
+                raise serializers.ValidationError(
+                    "You must upload an image or write some content."
+                )
+        else:
+            if not data.get('content') and not data.get('image'):
+                raise serializers.ValidationError(
+                    "You must upload an image or write some content."
+                )
         return data
+
+    def update(self, instance, validated_data):
+        """
+        Handle updating the Post, ensuring the image is retained if not modified.
+        """
+        if not validated_data.get('image') and instance.image:
+            validated_data['image'] = instance.image
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Post
