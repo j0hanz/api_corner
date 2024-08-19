@@ -9,6 +9,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
 
     owner = serializers.ReadOnlyField(source='owner.username')
     post_content = serializers.ReadOnlyField(source='post.content')
+    post_image = serializers.ReadOnlyField(source='post.image.url')
     post_owner = serializers.ReadOnlyField(source='post.owner.username')
     post_owner_profile_image = serializers.ReadOnlyField(
         source='post.owner.profile.image.url'
@@ -29,6 +30,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
             'post_owner_profile_image',
             'post_owner_profile_id',
             'created_at',
+            'post_image',
         ]
 
     def create(self, validated_data):
