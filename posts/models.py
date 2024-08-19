@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
 from cloudinary.models import CloudinaryField
+from django.core.exceptions import ValidationError
 
 
 class Post(models.Model):
@@ -9,7 +10,7 @@ class Post(models.Model):
     Post model, representing a post created by a user.
     """
 
-    content = models.TextField(max_length=500)
+    content = models.TextField(max_length=500, blank=True, null=True)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="posts"
     )
@@ -52,3 +53,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'Post {self.id} by {self.owner.username}'
+
+    def clean(self):
+        if not self.content and not self.image:
+            raise ValidationError(
+                'You must upload an image or write some content.'
+            )

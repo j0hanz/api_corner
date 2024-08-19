@@ -131,13 +131,15 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             )
         return ''
 
-    def validate_content(self, value):
+    def validate(self, data):
         """
-        Validate the content of the post.
+        Validate that either content or image is present.
         """
-        if not value.strip():
-            raise serializers.ValidationError("Post content cannot be empty.")
-        return value
+        if not data.get('content') and not data.get('image'):
+            raise serializers.ValidationError(
+                "You must upload an image or write some content."
+            )
+        return data
 
     class Meta:
         model = Post
