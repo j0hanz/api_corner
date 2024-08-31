@@ -1,7 +1,9 @@
 from rest_framework import generics
+
+from api_blog.permissions import IsOwnerOrReadOnly
+
 from .models import Bookmark
 from .serializers import BookmarkSerializer
-from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class BookmarkListCreate(generics.ListCreateAPIView):

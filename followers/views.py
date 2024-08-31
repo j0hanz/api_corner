@@ -1,5 +1,7 @@
 from rest_framework import generics
+
 from api_blog.permissions import IsOwnerOrReadOnly
+
 from .models import Follower
 from .serializers import FollowerSerializer
 

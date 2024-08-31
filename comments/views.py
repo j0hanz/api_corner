@@ -1,9 +1,11 @@
-from rest_framework import generics
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Comment
-from .serializers import CommentSerializer, CommentDetailSerializer
+from rest_framework import generics
+
 from api_blog.permissions import IsOwnerOrReadOnly
+
+from .models import Comment
+from .serializers import CommentDetailSerializer, CommentSerializer
 
 
 class CommentListCreateView(generics.ListCreateAPIView):

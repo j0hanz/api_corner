@@ -1,7 +1,9 @@
 from rest_framework import generics
+
+from api_blog.permissions import IsOwnerOrReadOnly
+
 from .models import Contact
 from .serializers import ContactSerializer
-from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class ContactCreateView(generics.CreateAPIView):

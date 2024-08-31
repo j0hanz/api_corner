@@ -1,8 +1,8 @@
-from django.db import models
-from django.contrib.auth.models import User
-from taggit.managers import TaggableManager
 from cloudinary.models import CloudinaryField
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import models
+from taggit.managers import TaggableManager
 
 
 class Post(models.Model):

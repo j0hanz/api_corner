@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta, timezone
+
 from rest_framework import serializers
-from taggit.serializers import TagListSerializerField, TaggitSerializer
-from .models import Post
-from likes.models import Like
+from taggit.serializers import TaggitSerializer, TagListSerializerField
+
 from bookmarks.models import Bookmark
-from datetime import datetime, timezone, timedelta
+from likes.models import Like
+
+from .models import Post
 
 
 def shortnaturaltime(value):
@@ -15,12 +18,11 @@ def shortnaturaltime(value):
 
     if delta < timedelta(minutes=1):
         return 'just now'
-    elif delta < timedelta(hours=1):
+    if delta < timedelta(hours=1):
         return f'{int(delta.total_seconds() // 60)}m'
-    elif delta < timedelta(days=1):
+    if delta < timedelta(days=1):
         return f'{int(delta.total_seconds() // 3600)}h'
-    else:
-        return f'{delta.days}d'
+    return f'{delta.days}d'
 
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):

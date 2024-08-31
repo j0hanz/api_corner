@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import FollowerList, FollowerDetail
+
+from .views import FollowerDetail, FollowerList
 
 urlpatterns = [
     path('', FollowerList.as_view()),

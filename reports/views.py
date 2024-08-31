@@ -1,8 +1,10 @@
-from rest_framework import generics, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Report, Post
-from .serializers import ReportSerializer
+from rest_framework import filters, generics, serializers
+
 from api_blog.permissions import IsOwnerOrReadOnly
+
+from .models import Post, Report
+from .serializers import ReportSerializer
 
 
 class ReportListCreateView(generics.ListCreateAPIView):

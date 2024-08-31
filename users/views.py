@@ -1,7 +1,9 @@
-from rest_framework import generics, filters
-from api_blog.permissions import IsOwnerOrReadOnly
-from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics
+
+from api_blog.permissions import IsOwnerOrReadOnly
+
 from .models import Profile
 from .serializers import ProfileSerializer
 

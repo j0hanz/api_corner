@@ -1,8 +1,10 @@
-from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics
+
+from api_blog.permissions import IsAuthorOrReadOnly
+
 from .models import News
 from .serializers import NewsSerializer
-from api_blog.permissions import IsAuthorOrReadOnly
 
 
 class NewsListCreateView(generics.ListCreateAPIView):

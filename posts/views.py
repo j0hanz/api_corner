@@ -1,9 +1,11 @@
-from rest_framework import generics, filters
-from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics
+
+from api_blog.permissions import IsOwnerOrReadOnly
+
 from .models import Post
 from .serializers import PostSerializer
-from api_blog.permissions import IsOwnerOrReadOnly
 
 
 class PostQuerySet(generics.GenericAPIView):
