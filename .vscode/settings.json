@@ -43,7 +43,10 @@
   "[nj]": { "editor.defaultFormatter": "monosans.djlint" },
   "[njk]": { "editor.defaultFormatter": "monosans.djlint" },
   "[nunjucks]": { "editor.defaultFormatter": "monosans.djlint" },
-  "[python]": { "editor.defaultFormatter": "ms-python.black-formatter" },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
   "[twig]": { "editor.defaultFormatter": "monosans.djlint" },
   "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
 
@@ -66,6 +69,15 @@
     "--skip-string-normalization"
   ],
 
+  // Flake8 Linting Settings
+  "flake8.args": ["--ignore=E501, F401"],
+  "flake8.importStrategy": "fromEnvironment",
+  "flake8.severity": {
+    "E": "Error",
+    "W": "Warning",
+    "F": "Error"
+  },
+
   // ESLint Settings
   "eslint.format.enable": true,
   "eslint.options": { "extensions": [".js", ".jsx", ".ts", ".tsx"] },
@@ -85,21 +97,11 @@
   "css.validate": false,
   "emmet.includeLanguages": { "django-html": "html" },
 
-  // Markdownlint Settings
-  "markdownlint.config": {
-    "default": true,
-    "MD004": { "style": "consistent" },
-    "MD007": { "indent": 4 },
-    "MD013": { "line_length": 80, "code_blocks": false, "tables": false },
-    "MD033": false,
-    "MD041": false
-  },
-
   // UI and Git Settings
   "diffEditor.ignoreTrimWhitespace": false,
   "explorer.confirmDragAndDrop": false,
   "git.autofetch": true,
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.iconTheme": "material-icon-theme",
 
   // djlint Settings for Django
   "djlint.formatAttributeTemplateTags": true,
