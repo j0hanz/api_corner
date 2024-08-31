@@ -3,9 +3,12 @@ core.mongo*
 core.python*
 env.py
 __pycache__/
+.pytest_cache/
 *.py[cod]
 node_modules/
 .github/
 cloudinary_python.txt
 db.sqlite3
 /staticfiles/
+ruff.toml
+.ruff_cache/
