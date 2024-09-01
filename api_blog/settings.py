@@ -37,7 +37,7 @@ if 'CLIENT_ORIGIN' in os.environ:
     ]
 else:
     CORS_ALLOWED_ORIGIN_REGEXES = [
-        r"^https://.*\.codeinstitute-ide\.net$",
+        r'^https://.*\.codeinstitute-ide\.net$',
     ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -126,12 +126,12 @@ if 'DEV' in os.environ:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    print("Connected to SQLite database for development")
+    print('Connected to SQLite database for development')
 else:
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
-    print("Connected to PostgreSQL database for production")
+    print('Connected to PostgreSQL database for production')
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

@@ -6,9 +6,7 @@ from posts.models import Post
 
 
 class Report(models.Model):
-    """
-    Model for users to report inappropriate posts, comments, or users.
-    """
+    """Model for users to report inappropriate posts, comments, or users."""
 
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='reports'
@@ -41,9 +39,7 @@ class Report(models.Model):
         ordering = ['-reported_at']
 
     def __str__(self):
-        """
-        String representation of the Report object.
-        """
+        """String representation of the Report object."""
         report_details = []
 
         if self.post:
@@ -53,5 +49,5 @@ class Report(models.Model):
         if self.reported_user:
             report_details.append(f'User {self.reported_user.username}')
 
-        details = " - ".join(report_details) if report_details else "General"
+        details = ' - '.join(report_details) if report_details else 'General'
         return f'Report {self.id} - {details} by {self.owner.username}'

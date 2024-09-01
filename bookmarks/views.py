@@ -7,9 +7,7 @@ from .serializers import BookmarkSerializer
 
 
 class BookmarkListCreate(generics.ListCreateAPIView):
-    """
-    List and create bookmarks.
-    """
+    """List and create bookmarks."""
 
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = BookmarkSerializer
@@ -24,9 +22,7 @@ class BookmarkListCreate(generics.ListCreateAPIView):
 
 
 class BookmarkDetail(generics.RetrieveDestroyAPIView):
-    """
-    Retrieve and delete a bookmark.
-    """
+    """Retrieve and delete a bookmark."""
 
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = BookmarkSerializer

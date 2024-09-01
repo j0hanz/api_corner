@@ -5,9 +5,7 @@ from posts.models import Post
 
 
 class Comment(models.Model):
-    """
-    Model for users to comment on posts.
-    """
+    """Model for users to comment on posts."""
 
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments'
@@ -21,8 +19,8 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = "Comment"
-        verbose_name_plural = "Comments"
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
 
     def __str__(self):
         return f'Comment {self.id} on Post {self.post.id} by {self.owner.username}'

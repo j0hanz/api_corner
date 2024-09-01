@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from rest_framework import serializers
 from taggit.serializers import TaggitSerializer, TagListSerializerField
@@ -10,10 +10,8 @@ from .models import Post
 
 
 def shortnaturaltime(value):
-    """
-    Return a human-readable string representing the time delta from now to the given value.
-    """
-    now = datetime.now(timezone.utc)
+    """Return a human-readable string representing the time delta from now to the given value."""
+    now = datetime.now(UTC)
     delta = now - value
 
     if delta < timedelta(minutes=1):
@@ -26,9 +24,7 @@ def shortnaturaltime(value):
 
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
-    """
-    Serializer for the Post model.
-    """
+    """Serializer for the Post model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
@@ -44,27 +40,20 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     filtered_image_url = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
-        """
-        Check if the request user is the owner of the post.
-        """
+        """Check if the request user is the owner of the post."""
         request = self.context.get('request')
         return request and request.user == obj.owner
 
     def get_created_at(self, obj):
-        """
-        Return a human-readable string representing the creation time.
-        """
+        """Return a human-readable string representing the creation time."""
         return shortnaturaltime(obj.created_at)
 
     def get_updated_at(self, obj):
-        """
-        Return a human-readable string representing the last update time.
-        """
+        """Return a human-readable string representing the last update time."""
         return shortnaturaltime(obj.updated_at)
 
     def get_like_id(self, obj):
-        """
-        Get the like id if the user has liked the post.
+        """Get the like id if the user has liked the post.
         Return None if the user is not authenticated or has not liked the post.
         """
         request = self.context.get('request')
@@ -74,8 +63,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         return None
 
     def get_bookmark_id(self, obj):
-        """
-        Get the bookmark id if the user has bookmarked the post.
+        """Get the bookmark id if the user has bookmarked the post.
         Return None if the user is not authenticated or has not bookmarked the post.
         """
         request = self.context.get('request')
@@ -87,21 +75,15 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         return None
 
     def get_likes_count(self, obj):
-        """
-        Return the number of likes for the post.
-        """
+        """Return the number of likes for the post."""
         return obj.likes.count()
 
     def get_comments_count(self, obj):
-        """
-        Return the number of comments for the post.
-        """
+        """Return the number of comments for the post."""
         return obj.comments.count()
 
     def get_filtered_image_url(self, obj):
-        """
-        Return the URL of the image with the applied filter using Cloudinary transformations.
-        """
+        """Return the URL of the image with the applied filter using Cloudinary transformations."""
         if obj.image:
             transformations = {
                 'GRAYSCALE': 'e_grayscale',
@@ -127,16 +109,14 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             }
             transformation = transformations.get(obj.image_filter, '')
             return (
-                f"{obj.image.url}?transformation={transformation}"
+                f'{obj.image.url}?transformation={transformation}'
                 if transformation
                 else obj.image.url
             )
         return ''
 
     def validate(self, data):
-        """
-        Validate that either content or image is present.
-        """
+        """Validate that either content or image is present."""
         request = self.context.get('request')
         if request and request.method in ['PUT', 'PATCH']:
             instance = self.instance
@@ -146,19 +126,17 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
                 and not instance.image
             ):
                 raise serializers.ValidationError(
-                    "You must upload an image or write some content."
+                    'You must upload an image or write some content.'
                 )
         else:
             if not data.get('content') and not data.get('image'):
                 raise serializers.ValidationError(
-                    "You must upload an image or write some content."
+                    'You must upload an image or write some content.'
                 )
         return data
 
     def update(self, instance, validated_data):
-        """
-        Handle updating the Post, ensuring the image is retained if not modified.
-        """
+        """Handle updating the Post, ensuring the image is retained if not modified."""
         if not validated_data.get('image') and instance.image:
             validated_data['image'] = instance.image
         return super().update(instance, validated_data)

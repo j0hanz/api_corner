@@ -8,9 +8,7 @@ from .serializers import ReportSerializer
 
 
 class ReportListCreateView(generics.ListCreateAPIView):
-    """
-    View for listing and creating reports.
-    """
+    """View for listing and creating reports."""
 
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Report.objects.all().order_by('-reported_at')
@@ -42,7 +40,7 @@ class ReportListCreateView(generics.ListCreateAPIView):
 
         if not post_id and not comment_id:
             raise serializers.ValidationError(
-                "Either post or comment must be provided."
+                'Either post or comment must be provided.'
             )
 
         if post_id:
@@ -51,7 +49,7 @@ class ReportListCreateView(generics.ListCreateAPIView):
                 reported_user = post_instance.owner
             except Post.DoesNotExist:
                 raise serializers.ValidationError(
-                    "The provided post does not exist."
+                    'The provided post does not exist.'
                 )
         else:
             reported_user = None

@@ -7,8 +7,7 @@ from .serializers import FollowerSerializer
 
 
 class FollowerList(generics.ListCreateAPIView):
-    """
-    View for listing and creating followers.
+    """View for listing and creating followers.
     Credit: Code Institute django rest walkthrough project
     """
 
@@ -21,8 +20,7 @@ class FollowerList(generics.ListCreateAPIView):
 
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
-    """
-    View for retrieving and deleting followers.
+    """View for retrieving and deleting followers.
     Credit: Code Institute django rest walkthrough project
     """
 

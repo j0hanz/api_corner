@@ -5,9 +5,7 @@ from .models import Post
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for the Post model.
-    """
+    """Admin configuration for the Post model."""
 
     list_display = ('id', 'owner', 'content', 'created_at', 'updated_at')
     list_filter = ('owner', 'created_at', 'updated_at')

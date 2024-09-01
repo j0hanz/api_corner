@@ -4,9 +4,7 @@ from .models import Bookmark
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Bookmark model.
-    """
+    """Serializer for the Bookmark model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
     post_content = serializers.ReadOnlyField(source='post.content')

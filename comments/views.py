@@ -9,9 +9,7 @@ from .serializers import CommentDetailSerializer, CommentSerializer
 
 
 class CommentListCreateView(generics.ListCreateAPIView):
-    """
-    View for listing and creating comments.
-    """
+    """View for listing and creating comments."""
 
     serializer_class = CommentSerializer
     permission_classes = [IsOwnerOrReadOnly]
@@ -26,8 +24,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
 
 
 class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    View for retrieving, updating, and deleting a single comment.
+    """View for retrieving, updating, and deleting a single comment.
     Only the owner can update or delete the comment.
     """
 

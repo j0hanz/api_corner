@@ -6,9 +6,7 @@ from posts.models import Post
 
 
 class Like(models.Model):
-    """
-    Model representing a like for a post or comment.
-    """
+    """Model representing a like for a post or comment."""
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(

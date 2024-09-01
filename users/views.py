@@ -9,9 +9,7 @@ from .serializers import ProfileSerializer
 
 
 class ProfileList(generics.ListAPIView):
-    """
-    View for listing profiles.
-    """
+    """View for listing profiles."""
 
     queryset = Profile.objects.annotate(
         posts_count=Count('owner__posts', distinct=True),
@@ -34,9 +32,7 @@ class ProfileList(generics.ListAPIView):
 
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    View for retrieving, updating, and deleting profiles.
-    """
+    """View for retrieving, updating, and deleting profiles."""
 
     permission_classes = [IsOwnerOrReadOnly]
     queryset = Profile.objects.annotate(

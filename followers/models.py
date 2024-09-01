@@ -3,8 +3,7 @@ from django.db import models
 
 
 class Follower(models.Model):
-    """
-    Represents a follower relationship between users.
+    """Represents a follower relationship between users.
     Each instance indicates that 'owner' user is following 'followed'.
     """
 

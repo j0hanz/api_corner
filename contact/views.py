@@ -7,9 +7,7 @@ from .serializers import ContactSerializer
 
 
 class ContactCreateView(generics.CreateAPIView):
-    """
-    View for creating a new contact.
-    """
+    """View for creating a new contact."""
 
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ContactSerializer
@@ -19,15 +17,11 @@ class ContactCreateView(generics.CreateAPIView):
 
 
 class ContactListView(generics.ListAPIView):
-    """
-    View for listing all contacts.
-    """
+    """View for listing all contacts."""
 
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = ContactSerializer
 
     def get_queryset(self):
-        """
-        Filter the queryset by the current user.
-        """
+        """Filter the queryset by the current user."""
         return Contact.objects.filter(owner=self.request.user)

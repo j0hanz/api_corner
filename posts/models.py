@@ -6,13 +6,11 @@ from taggit.managers import TaggableManager
 
 
 class Post(models.Model):
-    """
-    Post model, representing a post created by a user.
-    """
+    """Post model, representing a post created by a user."""
 
     content = models.TextField(max_length=500, blank=True, null=True)
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="posts"
+        User, on_delete=models.CASCADE, related_name='posts'
     )
     image = CloudinaryField('image', blank=True, null=True)
     image_filter = models.CharField(
@@ -48,8 +46,8 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = "Post"
-        verbose_name_plural = "Posts"
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
 
     def __str__(self):
         return f'Post {self.id} by {self.owner.username}'

@@ -5,9 +5,7 @@ from .models import Report
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
-    """
-    Register Report model in the admin panel.
-    """
+    """Register Report model in the admin panel."""
 
     list_display = (
         'id',

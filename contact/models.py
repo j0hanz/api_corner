@@ -4,9 +4,7 @@ from django.db import models
 
 
 class Contact(models.Model):
-    """
-    Model for users to contact us.
-    """
+    """Model for users to contact us."""
 
     CATEGORY_CHOICES = [
         ('general', 'General Inquiry'),

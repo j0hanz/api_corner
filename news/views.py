@@ -8,9 +8,7 @@ from .serializers import NewsSerializer
 
 
 class NewsListCreateView(generics.ListCreateAPIView):
-    """
-    View for listing and creating news articles.
-    """
+    """View for listing and creating news articles."""
 
     permission_classes = [IsAuthorOrReadOnly]
     queryset = News.objects.all().order_by('-published_at')
@@ -29,8 +27,7 @@ class NewsListCreateView(generics.ListCreateAPIView):
 
 
 class NewsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    View for retrieving, updating, and deleting a single news article.
+    """View for retrieving, updating, and deleting a single news article.
     Only the author can update or delete the article.
     """
 

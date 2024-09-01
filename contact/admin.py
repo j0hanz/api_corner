@@ -5,9 +5,7 @@ from .models import Contact
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    """
-    Admin panel configuration for the Contact model.
-    """
+    """Admin panel configuration for the Contact model."""
 
     fields = (
         'owner',

@@ -5,9 +5,7 @@ from django.utils.text import slugify
 
 
 class News(models.Model):
-    """
-    Model representing a news article.
-    """
+    """Model representing a news article."""
 
     CATEGORY_UPDATE = 'update'
     CATEGORY_GENERAL_NEWS = 'general_news'
@@ -32,15 +30,15 @@ class News(models.Model):
 
     class Meta:
         ordering = ['-published_at']
-        verbose_name = "News Article"
-        verbose_name_plural = "News Articles"
+        verbose_name = 'News Article'
+        verbose_name_plural = 'News Articles'
 
     def __str__(self):
         return self.title
 
     def clean(self):
         if not self.author.is_superuser:
-            raise ValidationError("Only superusers can create news articles.")
+            raise ValidationError('Only superusers can create news articles.')
 
     def save(self, *args, **kwargs):
         self.clean()

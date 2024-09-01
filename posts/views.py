@@ -9,9 +9,7 @@ from .serializers import PostSerializer
 
 
 class PostQuerySet(generics.GenericAPIView):
-    """
-    Base queryset for post views.
-    """
+    """Base queryset for post views."""
 
     queryset = Post.objects.annotate(
         likes_count=Count('likes', distinct=True),
@@ -20,9 +18,7 @@ class PostQuerySet(generics.GenericAPIView):
 
 
 class PostListCreateView(PostQuerySet, generics.ListCreateAPIView):
-    """
-    List and create posts. Only authenticated users can create posts.
-    """
+    """List and create posts. Only authenticated users can create posts."""
 
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
@@ -51,9 +47,7 @@ class PostListCreateView(PostQuerySet, generics.ListCreateAPIView):
 
 
 class PostDetailView(PostQuerySet, generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update, and delete a single post. Only the owner can modify it.
-    """
+    """Retrieve, update, and delete a single post. Only the owner can modify it."""
 
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]

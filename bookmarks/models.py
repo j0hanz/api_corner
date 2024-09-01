@@ -5,9 +5,7 @@ from posts.models import Post
 
 
 class Bookmark(models.Model):
-    """
-    Bookmark model, representing a bookmark created by a user.
-    """
+    """Bookmark model, representing a bookmark created by a user."""
 
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='bookmarks'

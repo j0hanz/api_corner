@@ -24,6 +24,6 @@ class NewsSerializer(serializers.ModelSerializer):
         request = self.context.get('request', None)
         if request and not request.user.is_superuser:
             raise serializers.ValidationError(
-                "Only superusers can create news articles."
+                'Only superusers can create news articles.'
             )
         return data

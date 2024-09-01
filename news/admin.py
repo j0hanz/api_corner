@@ -5,9 +5,7 @@ from .models import News
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for the News model.
-    """
+    """Admin configuration for the News model."""
 
     list_display = (
         'id',

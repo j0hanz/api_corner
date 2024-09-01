@@ -5,9 +5,7 @@ from .models import Comment
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    """
-    Admin panel configuration for the Comment model.
-    """
+    """Admin panel configuration for the Comment model."""
 
     list_display = (
         'id',

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from rest_framework import serializers
 
@@ -8,10 +8,8 @@ from .models import Comment
 
 
 def shortnaturaltime(value):
-    """
-    Return a human-readable string representing the time delta from now to the given value.
-    """
-    now = datetime.now(timezone.utc)
+    """Return a human-readable string representing the time delta from now to the given value."""
+    now = datetime.now(UTC)
     delta = now - value
 
     if delta < timedelta(minutes=1):
@@ -24,9 +22,7 @@ def shortnaturaltime(value):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Comment model.
-    """
+    """Serializer for the Comment model."""
 
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
@@ -57,8 +53,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return self.context['request'].user == obj.owner
 
     def get_like_id(self, obj):
-        """
-        Gets the like id if the user has liked the comment.
+        """Gets the like id if the user has liked the comment.
         If user is not authenticated, or has not liked the comment,
         return None.
         """
@@ -69,8 +64,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return None
 
     def get_likes_count(self, obj):
-        """
-        Returns the number of likes for the comment.
+        """Returns the number of likes for the comment.
         "likes" is referencing the Like model, connected to the Comment model,
         through related_name="likes".
         """
@@ -84,8 +78,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CommentDetailSerializer(CommentSerializer):
-    """
-    Serializer for detailed view of the Comment model.
+    """Serializer for detailed view of the Comment model.
     Ensures the post is read-only.
     """
 
