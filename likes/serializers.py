@@ -6,7 +6,7 @@ from likes.models import Like
 
 class LikeSerializer(serializers.ModelSerializer):
     """Serializer for the Like model
-    The create method handles the unique constraint on 'owner', 'post' and 'comment'
+    The create method handles the unique constraint on 'owner', 'post' and 'comment'.
     """
 
     owner = serializers.ReadOnlyField(source='owner.username')

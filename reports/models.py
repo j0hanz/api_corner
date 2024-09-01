@@ -39,9 +39,8 @@ class Report(models.Model):
         ordering = ['-reported_at']
 
     def __str__(self):
-        """String representation of the Report object."""
+        """Return a string representation of the Report object."""
         report_details = []
-
         if self.post:
             report_details.append(f'Post {self.post.id}')
         if self.comment:

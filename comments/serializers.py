@@ -53,7 +53,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return self.context['request'].user == obj.owner
 
     def get_like_id(self, obj):
-        """Gets the like id if the user has liked the comment.
+        """Returns the like id if the user has liked the comment.
         If user is not authenticated, or has not liked the comment,
         return None.
         """
