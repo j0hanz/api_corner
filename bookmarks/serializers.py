@@ -36,7 +36,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
         validated_data['owner'] = self.context['request'].user
         try:
             return super().create(validated_data)
-        except:
+        except Exception:
             return Bookmark.objects.get(
                 owner=validated_data['owner'], post=validated_data['post']
             )

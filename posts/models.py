@@ -8,7 +8,7 @@ from taggit.managers import TaggableManager
 class Post(models.Model):
     """Post model, representing a post created by a user."""
 
-    content = models.TextField(max_length=500, blank=True, null=True)
+    content = models.TextField(max_length=500, blank=True)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts'
     )

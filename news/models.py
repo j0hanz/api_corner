@@ -36,12 +36,12 @@ class News(models.Model):
     def __str__(self):
         return self.title
 
-    def clean(self):
-        if not self.author.is_superuser:
-            raise ValidationError('Only superusers can create news articles.')
-
     def save(self, *args, **kwargs):
         self.clean()
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    def clean(self):
+        if not self.author.is_superuser:
+            raise ValidationError('Only superusers can create news articles.')
