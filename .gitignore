@@ -10,5 +10,5 @@ node_modules/
 cloudinary_python.txt
 db.sqlite3
 /staticfiles/
-ruff.toml
+pyproject.toml
 .ruff_cache/
